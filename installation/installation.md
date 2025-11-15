@@ -238,6 +238,39 @@ You can comment/uncomment features in your own aggregator or apply individual fe
 composer update gravellian/basekit gravellian/basekit-recipe -W
 ```
 
+## (Optional) Install Docs via Composer
+
+Ship the distribution’s documentation into your project’s `docs/` so teams always have the latest guides alongside the code.
+
+1) Add the docs repo (if private):
+
+```
+composer config repositories.basekit-docs vcs git@github.com:gravellian/basekit-docs.git
+```
+
+2) Require the docs package and installers extender:
+
+```
+composer require oomphinc/composer-installers-extender:^2.0 gravellian/basekit-docs:dev-main -W
+```
+
+3) In `composer.json`, add installer types and a path for docs:
+
+```
+"extra": {
+  "installer-types": ["gravellian-docs"],
+  "installer-paths": {
+    "docs/": ["type:gravellian-docs"]
+  }
+}
+```
+
+Update later with:
+
+```
+composer update gravellian/basekit-docs -W
+```
+
 - Re‑apply recipes and rebuild:
 
 ```
