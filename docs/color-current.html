@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Current Theme Colors – Visual Reference</title>
+    <style>
+      :root{
+        /* Current tokens (from _var_default.scss) */
+        --bg: #635d59;            /* $brand-bg */
+        --primary: #d5b35b;       /* $brand-primary → $color-h1 */
+        --accent: #3ea0d8;        /* $brand-accent  → $color-h2 */
+        --neutral: #a28d7a;       /* $brand-neutral → $color-h3 */
+        /* Text ramp derives from $text-base mixed toward bg
+           (0%, 6%, 12%, 24%). JS below computes and assigns. */
+        --text-base: #f0e5d4;     /* $text-base (from _var_default.scss) */
+        --text: #f0e5d4;          /* will be set to "$text-high" (6% bg mix) */
+        --text-bright: #f0e5d4;   /* 0% bg */
+        --text-muted: #f0e5d4;    /* 12% bg */
+        --text-subtle: #f0e5d4;   /* 24% bg */
+        /* Derived accents (approx of tint/shade 18%) */
+        --accent-light: #61b1df;  /* $accent-light */
+        --accent-dark:  #3383b1;  /* $accent-dark */
+      }
+      html,body{height:100%}
+      body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif;line-height:1.45}
+      .wrap{max-width:1100px;margin:2rem auto;padding:0 1.25rem 3rem}
+      h1,h2,h3{margin:0;letter-spacing:-.02em}
+      .grid{display:grid;gap:2rem;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+      .card{background:rgba(0,0,0,.08);border:1px solid rgba(255,255,255,.08);border-radius:.5rem;padding:1.25rem}
+      .sw{display:flex;gap:.5rem;margin-top:.75rem}
+      .chip{flex:1 1 auto;height:.8rem;border-radius:.25rem}
+      .meta{margin-top:.5rem;font-size:.9rem;color:rgba(255,255,255,.82)}
+      .sample h1{font-size:2.2rem;color:var(--primary);font-weight:700;padding:.35em 0 .15em}
+      .sample h2{font-size:1.6rem;color:var(--accent);font-weight:300;padding-bottom:.35em}
+      .sample h2::after{content:"";display:block;border-bottom:.15em solid rgba(162,141,122,.5); /* $rule using neutral @ .5 */margin-top:.35em}
+      .sample h3{font-size:1.25rem;color:var(--neutral);font-weight:700;margin-top:.8rem}
+      .links a{color:var(--accent);text-decoration:none;border-bottom:2px solid transparent}
+      .links a:hover{color:var(--accent-light);border-color:var(--accent-light)}
+      .links a:active{color:var(--accent-dark);border-color:var(--accent-dark)}
+      .rule{border-bottom:.15em solid rgba(162,141,122,.5);margin:.6rem 0}
+      .muted{color:rgba(255,245,228,.75)}
+      code{background:rgba(255,255,255,.07);padding:.15em .35em;border-radius:.25rem}
+      .kvs{display:grid;grid-template-columns:160px 1fr;gap:.25rem .75rem;margin-top:.5rem;font-size:.92rem}
+      .kv .k{opacity:.8}
+
+      /* Tonal helper preview (CSS color-mix approximations) */
+      .tones{display:grid;gap:1rem;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));margin-top:.5rem}
+      .tone-card{background:rgba(0,0,0,.08);border:1px solid rgba(255,255,255,.08);border-radius:.5rem;padding:1rem}
+      .tone-row{display:flex;gap:.5rem;align-items:center;margin:.4rem 0}
+      .swatch{width:2.2rem;height:1rem;border-radius:.25rem}
+      .lbl{min-width:5.5rem;opacity:.85}
+      .tone-note{font-size:.85rem;color:rgba(255,255,255,.75)}
+      pre.code{background:rgba(255,255,255,.07);padding:.6rem .75rem;border-radius:.4rem;overflow:auto}
+      /* accent */
+      .t-accent        { background: var(--accent); }
+      .t-accent-t12    { background: color-mix(in srgb, white 12%, var(--accent)); }
+      .t-accent-t18    { background: color-mix(in srgb, white 18%, var(--accent)); }
+      .t-accent-s12    { background: color-mix(in srgb, black 12%, var(--accent)); }
+      .t-accent-s18    { background: color-mix(in srgb, black 18%, var(--accent)); }
+      /* primary */
+      .t-primary       { background: var(--primary); }
+      .t-primary-t12   { background: color-mix(in srgb, white 12%, var(--primary)); }
+      .t-primary-t18   { background: color-mix(in srgb, white 18%, var(--primary)); }
+      .t-primary-s12   { background: color-mix(in srgb, black 12%, var(--primary)); }
+      .t-primary-s18   { background: color-mix(in srgb, black 18%, var(--primary)); }
+      /* neutral */
+      .t-neutral       { background: var(--neutral); }
+      .t-neutral-t12   { background: color-mix(in srgb, white 12%, var(--neutral)); }
+      .t-neutral-t18   { background: color-mix(in srgb, white 18%, var(--neutral)); }
+      .t-neutral-s12   { background: color-mix(in srgb, black 12%, var(--neutral)); }
+      .t-neutral-s18   { background: color-mix(in srgb, black 18%, var(--neutral)); }
+
+      /* Text tone classes (colors assigned via JS for compatibility) */
+      .t-text-bright { color: var(--text-bright); }
+      .t-text-high   { color: var(--text); }
+      .t-text-muted  { color: var(--text-muted); }
+      .t-text-subtle { color: var(--text-subtle); }
+      .chip-text { height: 1rem; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1 style="font-size:1.8rem;padding:.25em 0;border-bottom:2px solid rgba(255,255,255,.15)">Current Theme Colors – Visual Reference</h1>
+      <p class="meta">Rendered against your page background <code>#635d59</code>. Text tones follow the ramp derived in <code>scss/base/var/_var_default.scss</code> (blend background into <code>$text-base</code> at 0%/6%/12%/24%).</p>
+
+      <div class="grid">
+        <section class="card">
+          <div class="sample">
+            <h1>H1 – Primary</h1>
+            <h2>H2 – Accent</h2>
+            <h3>H3 – Neutral</h3>
+          </div>
+          <div class="sw">
+            <div class="chip" style="background:var(--primary)" title="#d5b35b"></div>
+            <div class="chip" style="background:var(--accent)" title="#3ea0d8"></div>
+            <div class="chip" style="background:var(--neutral)" title="#a28d7a"></div>
+          </div>
+          <div class="meta">H1 <code>#d5b35b</code> • H2 <code>#3ea0d8</code> • H3 <code>#a28d7a</code></div>
+        </section>
+
+        <section class="card">
+          <h3 style="color:var(--text)">Links & interactions</h3>
+          <p class="links">Normal <a href="#">link</a>, <span class="muted">hover</span> and <span class="muted">active</span> use accent ramps.</p>
+          <div class="kvs">
+            <div class="k">link</div><div class="v"><code>#3ea0d8</code></div>
+            <div class="k">hover</div><div class="v"><code>#61b1df</code></div>
+            <div class="k">active</div><div class="v"><code>#3383b1</code></div>
+          </div>
+        </section>
+
+        <section class="card">
+          <h3 style="color:var(--text)">Rules & borders</h3>
+          <div class="rule"></div>
+          <div class="meta">Rule color = <code>rgba(#a28d7a, .5)</code> (from <code>$rule</code>). Thickness <code>.15em</code> (from <code>$stroke-2</code>).</div>
+        </section>
+
+        <section class="card">
+          <h3 style="color:var(--text)">Swatches</h3>
+          <div class="sw"><div class="chip" style="background:var(--bg)"></div><div class="chip" style="background:var(--text)"></div></div>
+          <div class="meta">Background <code>#635d59</code> • Text <code>#fff5e4</code></div>
+        </section>
+      </div>
+
+      <h2 style="font-size:1.4rem;margin:2.25rem 0 .5rem;border-bottom:2px solid rgba(255,255,255,.15);padding-bottom:.35rem">Text tones on background</h2>
+      <p class="meta">Preview of text ramp derived from <code>$color-text</code> on the site background. Use these roles instead of ad‑hoc opacities.</p>
+
+      <div class="grid">
+        <section class="card">
+          <h3 style="margin:0 0 .5rem; color:var(--text)">Swatches</h3>
+          <div class="sw">
+            <div class="chip chip-text t-text-bright" title="$text-bright"></div>
+            <div class="chip chip-text t-text-high"   title="$text-high"></div>
+            <div class="chip chip-text t-text-muted"  title="$text-muted"></div>
+            <div class="chip chip-text t-text-subtle" title="$text-subtle"></div>
+          </div>
+          <div class="meta">$text-bright • $text-high • $text-muted • $text-subtle</div>
+        </section>
+
+        <section class="card">
+          <h3 style="margin:0 0 .5rem; color:var(--text)">Paragraph samples</h3>
+          <p class="t-text-bright">Bright body text — use sparingly for emphasis or on darker blocks.</p>
+          <p class="t-text-high">High contrast body text — default for copy.</p>
+          <p class="t-text-muted">Muted text — secondary metadata, dates, bylines.</p>
+          <p class="t-text-subtle">Subtle text — low‑emphasis UI notes and helper text.</p>
+        </section>
+      </div>
+
+      <h2 style="font-size:1.4rem;margin:2.25rem 0 .5rem;border-bottom:2px solid rgba(255,255,255,.15);padding-bottom:.35rem">Tonal helpers (visual preview)</h2>
+      <p class="meta">Preview of <code>tint()</code> and <code>shade()</code> commonly used amounts. In SCSS we use <code>tint($c, 12–18%)</code> and <code>shade($c, 12–18%)</code>. Below approximated with CSS <code>color-mix()</code>.</p>
+
+      <div class="tones">
+        <div class="tone-card">
+          <h3 style="margin:0 0 .5rem; color:var(--accent)">Accent (H2)</h3>
+          <div class="tone-row"><span class="lbl">Base</span><span class="swatch t-accent"></span></div>
+          <div class="tone-row"><span class="lbl">tint 12%</span><span class="swatch t-accent-t12"></span></div>
+          <div class="tone-row"><span class="lbl">tint 18%</span><span class="swatch t-accent-t18"></span></div>
+          <div class="tone-row"><span class="lbl">shade 12%</span><span class="swatch t-accent-s12"></span></div>
+          <div class="tone-row"><span class="lbl">shade 18%</span><span class="swatch t-accent-s18"></span></div>
+          <div class="tone-note">Good defaults: hover → tint 12–18%, active → shade 12–18%.</div>
+          <pre class="code"><code>// SCSS equivalents
+$accent-base:  $brand-accent;
+$accent-t12:   tint($brand-accent, 12%);
+$accent-t18:   tint($brand-accent, 18%);
+$accent-s12:   shade($brand-accent, 12%);
+$accent-s18:   shade($brand-accent, 18%);
+
+// Example usage
+a:hover  { color: $accent-t12; }
+a:active { color: $accent-s18; }
+.h2-underline { border-bottom: $stroke-2 solid rgba($accent-t12, .85); }
+</code></pre>
+        </div>
+
+        <div class="tone-card">
+          <h3 style="margin:0 0 .5rem; color:var(--primary)">Primary (H1)</h3>
+          <div class="tone-row"><span class="lbl">Base</span><span class="swatch t-primary"></span></div>
+          <div class="tone-row"><span class="lbl">tint 12%</span><span class="swatch t-primary-t12"></span></div>
+          <div class="tone-row"><span class="lbl">tint 18%</span><span class="swatch t-primary-t18"></span></div>
+          <div class="tone-row"><span class="lbl">shade 12%</span><span class="swatch t-primary-s12"></span></div>
+          <div class="tone-row"><span class="lbl">shade 18%</span><span class="swatch t-primary-s18"></span></div>
+          <pre class="code"><code>// SCSS equivalents
+$primary-base: $brand-primary;
+$primary-t12:  tint($brand-primary, 12%);
+$primary-t18:  tint($brand-primary, 18%);
+$primary-s12:  shade($brand-primary, 12%);
+$primary-s18:  shade($brand-primary, 18%);
+
+// Example usage
+h1:hover { color: $primary-t12; }
+.badge--primary { border: $stroke-1 solid $primary-s18; }
+</code></pre>
+        </div>
+
+        <div class="tone-card">
+          <h3 style="margin:0 0 .5rem; color:var(--neutral)">Neutral (H3/UI)</h3>
+          <div class="tone-row"><span class="lbl">Base</span><span class="swatch t-neutral"></span></div>
+          <div class="tone-row"><span class="lbl">tint 12%</span><span class="swatch t-neutral-t12"></span></div>
+          <div class="tone-row"><span class="lbl">tint 18%</span><span class="swatch t-neutral-t18"></span></div>
+          <div class="tone-row"><span class="lbl">shade 12%</span><span class="swatch t-neutral-s12"></span></div>
+          <div class="tone-row"><span class="lbl">shade 18%</span><span class="swatch t-neutral-s18"></span></div>
+          <pre class="code"><code>// SCSS equivalents
+$neutral-base: $brand-neutral;
+$neutral-t12:  tint($brand-neutral, 12%);
+$neutral-t18:  tint($brand-neutral, 18%);
+$neutral-s12:  shade($brand-neutral, 12%);
+$neutral-s18:  shade($brand-neutral, 18%);
+
+// Example usage
+.rule { border-bottom: $stroke-2 solid rgba($neutral-t12, .5); }
+.panel { border: $stroke-1 solid rgba($neutral-s18, .35); }
+</code></pre>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script>
+    (function(){
+      const root = document.documentElement;
+      const css = getComputedStyle(root);
+      function parseHex(h){
+        const m = h.trim().replace('#','');
+        const hex = m.length===3 ? m.split('').map(x=>x+x).join('') : m;
+        const n = parseInt(hex,16); return {r:(n>>16)&255,g:(n>>8)&255,b:n&255};
+      }
+      function toHex({r,g,b}){
+        const h=(v)=>('0'+v.toString(16)).slice(-2);
+        return `#${h(Math.round(r))}${h(Math.round(g))}${h(Math.round(b))}`;
+      }
+      function mix(a,b,ratio){ // ratio: 0..1 amount of b
+        return { r:a.r*(1-ratio)+b.r*ratio, g:a.g*(1-ratio)+b.g*ratio, b:a.b*(1-ratio)+b.b*ratio };
+      }
+      const base = parseHex(css.getPropertyValue('--text-base')||'#f0e5d4');
+      const bg   = parseHex(css.getPropertyValue('--bg')||'#635d59');
+      // Ramp: bright (0% bg), high (6% bg), muted (12% bg), subtle (24% bg)
+      const bright = mix(base, bg, 0.00);
+      const high   = mix(base, bg, 0.06);
+      const muted  = mix(base, bg, 0.12);
+      const subtle = mix(base, bg, 0.24);
+      root.style.setProperty('--text-bright', toHex(bright));
+      root.style.setProperty('--text',        toHex(high));
+      root.style.setProperty('--text-muted',  toHex(muted));
+      root.style.setProperty('--text-subtle', toHex(subtle));
+    })();
+  </script>
+  </html>

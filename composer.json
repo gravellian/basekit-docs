@@ -1,0 +1,6 @@
+{
+  "name": "gravellian/basekit-docs",
+  "type": "gravellian-docs",
+  "description": "Documentation for the BaseKit distribution (installation, recipes, SDCs, sub-theme starter)",
+  "license": "proprietary"
+}

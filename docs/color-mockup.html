@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Heading Color Palettes – Visual Mockup</title>
+    <style>
+      :root {
+        --bg: #635d59;
+        --text: #fff5e4;
+      }
+      html, body { height: 100%; }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif;
+        line-height: 1.4;
+      }
+      .wrap { max-width: 1100px; margin: 2rem auto; padding: 0 1.25rem 4rem; }
+      h1, h2, h3 { margin: 0; letter-spacing: -0.02em; }
+      .grid { display: grid; gap: 2rem; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+      .card { background: rgba(0,0,0,.08); border: 1px solid rgba(255,255,255,.08); border-radius: .5rem; padding: 1.25rem; }
+      .swatches { display: flex; gap: .5rem; margin: .75rem 0 0; }
+      .swatch { flex: 1 1 auto; height: .75rem; border-radius: .25rem; }
+      .meta { margin-top: .5rem; font-size: .9rem; color: rgba(255,255,255,.8); }
+      .sample h1 { font-size: 2.2rem; color: var(--h1); font-weight: 700; padding: .35em 0 .15em; }
+      .sample h2 { font-size: 1.6rem; color: var(--h2); font-weight: 300; padding-bottom: .35em; }
+      .sample h2::after { content: ""; display: block; border-bottom: 2px solid color-mix(in srgb, var(--h2) 85%, transparent); margin-top: .35em; }
+      .sample h3 { font-size: 1.25rem; color: var(--h3); font-weight: 700; margin-top: .8rem; }
+      .label { font-weight: 600; opacity: .85; }
+      code { background: rgba(255,255,255,.07); padding: .15em .35em; border-radius: .25rem; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1 style="font-size:2rem; padding:.25em 0; border-bottom: 2px solid rgba(255,255,255,.15);">Heading Color Palettes – Visual Mockup</h1>
+      <p class="meta">Background shown is your site page background <code>#635d59</code>. Each card shows H1 (gold), H2 (blue with underline), and H3 (brown/taupe) using the specified hex values.</p>
+
+      <div class="grid">
+        <!-- Current palette (from theme at time of writing) -->
+        <section class="card" style="--h1:#c9a764; --h2:#3ea0d8; --h3:#968c78;">
+          <div class="sample">
+            <h1>H1 – Current Gold</h1>
+            <h2>H2 – Current Blue</h2>
+            <h3>H3 – Current Brown</h3>
+          </div>
+          <div class="swatches">
+            <div class="swatch" style="background:#c9a764" title="#c9a764"></div>
+            <div class="swatch" style="background:#3ea0d8" title="#3ea0d8"></div>
+            <div class="swatch" style="background:#968c78" title="#968c78"></div>
+          </div>
+          <div class="meta"><span class="label">Hex:</span> H1 <code>#c9a764</code> • H2 <code>#3ea0d8</code> • H3 <code>#968c78</code></div>
+        </section>
+
+        <!-- Palette A — Crisp + Balanced -->
+        <section class="card" style="--h1:#D5B35B; --h2:#3EA0D8; --h3:#A28D7A;">
+          <div class="sample">
+            <h1>H1 – D5B35B</h1>
+            <h2>H2 – 3EA0D8</h2>
+            <h3>H3 – A28D7A</h3>
+          </div>
+          <div class="swatches">
+            <div class="swatch" style="background:#D5B35B"></div>
+            <div class="swatch" style="background:#3EA0D8"></div>
+            <div class="swatch" style="background:#A28D7A"></div>
+          </div>
+          <div class="meta"><span class="label">Hex:</span> H1 <code>#D5B35B</code> • H2 <code>#3EA0D8</code> • H3 <code>#A28D7A</code></div>
+        </section>
+
+        <!-- Palette B — Bolder Blue Pop -->
+        <section class="card" style="--h1:#CFA94A; --h2:#2F9ED1; --h3:#937E6B;">
+          <div class="sample">
+            <h1>H1 – CFA94A</h1>
+            <h2>H2 – 2F9ED1</h2>
+            <h3>H3 – 937E6B</h3>
+          </div>
+          <div class="swatches">
+            <div class="swatch" style="background:#CFA94A"></div>
+            <div class="swatch" style="background:#2F9ED1"></div>
+            <div class="swatch" style="background:#937E6B"></div>
+          </div>
+          <div class="meta"><span class="label">Hex:</span> H1 <code>#CFA94A</code> • H2 <code>#2F9ED1</code> • H3 <code>#937E6B</code></div>
+        </section>
+
+        <!-- Palette C — Warmer Gold, Deeper Blue -->
+        <section class="card" style="--h1:#E0B351; --h2:#2B8AD6; --h3:#B18D6F;">
+          <div class="sample">
+            <h1>H1 – E0B351</h1>
+            <h2>H2 – 2B8AD6</h2>
+            <h3>H3 – B18D6F</h3>
+          </div>
+          <div class="swatches">
+            <div class="swatch" style="background:#E0B351"></div>
+            <div class="swatch" style="background:#2B8AD6"></div>
+            <div class="swatch" style="background:#B18D6F"></div>
+          </div>
+          <div class="meta"><span class="label">Hex:</span> H1 <code>#E0B351</code> • H2 <code>#2B8AD6</code> • H3 <code>#B18D6F</code></div>
+        </section>
+      </div>
+
+      <h2 style="font-size:1.4rem; margin:2.5rem 0 .5rem; border-bottom: 2px solid rgba(255,255,255,.15); padding-bottom:.35rem;">Brand Trios ($color-1, $color-2, $color-3)</h2>
+      <p class="meta">Each card shows a full trio mapped as in your theme: $color-2 → H1 (gold), $color-3 → H2 (blue + underline), $color-1 → H3 (brown/taupe).</p>
+
+      <div class="grid">
+        <!-- Trio A -->
+        <section class="card" style="--h1:#D5B35B; --h2:#3EA0D8; --h3:#A28D7A;">
+          <div class="sample">
+            <h1>H1 ($color-2) – #D5B35B</h1>
+            <h2>H2 ($color-3) – #3EA0D8</h2>
+            <h3>H3 ($color-1) – #A28D7A</h3>
+          </div>
+          <div class="swatches">
+            <div class="swatch" style="background:#A28D7A" title="$color-1 #A28D7A"></div>
+            <div class="swatch" style="background:#D5B35B" title="$color-2 #D5B35B"></div>
+            <div class="swatch" style="background:#3EA0D8" title="$color-3 #3EA0D8"></div>
+          </div>
+          <div class="meta"><span class="label">$color-1</span> <code>#A28D7A</code> • <span class="label">$color-2</span> <code>#D5B35B</code> • <span class="label">$color-3</span> <code>#3EA0D8</code></div>
+        </section>
+
+        <!-- Trio B -->
+        <section class="card" style="--h1:#CFA94A; --h2:#2F9ED1; --h3:#937E6B;">
+          <div class="sample">
+            <h1>H1 ($color-2) – #CFA94A</h1>
+            <h2>H2 ($color-3) – #2F9ED1</h2>
+            <h3>H3 ($color-1) – #937E6B</h3>
+          </div>
+          <div class="swatches">
+            <div class="swatch" style="background:#937E6B" title="$color-1 #937E6B"></div>
+            <div class="swatch" style="background:#CFA94A" title="$color-2 #CFA94A"></div>
+            <div class="swatch" style="background:#2F9ED1" title="$color-3 #2F9ED1"></div>
+          </div>
+          <div class="meta"><span class="label">$color-1</span> <code>#937E6B</code> • <span class="label">$color-2</span> <code>#CFA94A</code> • <span class="label">$color-3</span> <code>#2F9ED1</code></div>
+        </section>
+
+        <!-- Trio C -->
+        <section class="card" style="--h1:#E0B351; --h2:#2B8AD6; --h3:#B18D6F;">
+          <div class="sample">
+            <h1>H1 ($color-2) – #E0B351</h1>
+            <h2>H2 ($color-3) – #2B8AD6</h2>
+            <h3>H3 ($color-1) – #B18D6F</h3>
+          </div>
+          <div class="swatches">
+            <div class="swatch" style="background:#B18D6F" title="$color-1 #B18D6F"></div>
+            <div class="swatch" style="background:#E0B351" title="$color-2 #E0B351"></div>
+            <div class="swatch" style="background:#2B8AD6" title="$color-3 #2B8AD6"></div>
+          </div>
+          <div class="meta"><span class="label">$color-1</span> <code>#B18D6F</code> • <span class="label">$color-2</span> <code>#E0B351</code> • <span class="label">$color-3</span> <code>#2B8AD6</code></div>
+        </section>
+      </div>
+
+      <h2 style="font-size:1.4rem; margin:2.5rem 0 .5rem; border-bottom: 2px solid rgba(255,255,255,.15); padding-bottom:.35rem;">Non‑Traditional Trios (More Variation)</h2>
+      <p class="meta">Four alternative hue mixes beyond gold/blue/brown. Mapping stays the same: $color-2 → H1, $color-3 → H2, $color-1 → H3.</p>
+
+      <div class="grid">
+        <!-- Copper + Teal + Sand -->
+        <section class="card" style="--h1:#D77B47; --h2:#2FB9B0; --h3:#C1AA97;">
+          <div class="sample">
+            <h1>H1 – Copper #D77B47</h1>
+            <h2>H2 – Teal #2FB9B0</h2>
+            <h3>H3 – Sand #C1AA97</h3>
+          </div>
+          <div class="swatches">
+            <div class="swatch" style="background:#C1AA97" title="$color-1 #C1AA97"></div>
+            <div class="swatch" style="background:#D77B47" title="$color-2 #D77B47"></div>
+            <div class="swatch" style="background:#2FB9B0" title="$color-3 #2FB9B0"></div>
+          </div>
+          <div class="meta"><span class="label">$color-1</span> <code>#C1AA97</code> • <span class="label">$color-2</span> <code>#D77B47</code> • <span class="label">$color-3</span> <code>#2FB9B0</code></div>
+        </section>
+
+        <!-- Amber + Mint + Mauve -->
+        <section class="card" style="--h1:#FFC857; --h2:#48E5C2; --h3:#A88FA1;">
+          <div class="sample">
+            <h1>H1 – Amber #FFC857</h1>
+            <h2>H2 – Mint #48E5C2</h2>
+            <h3>H3 – Mauve #A88FA1</h3>
+          </div>
+          <div class="swatches">
+            <div class="swatch" style="background:#A88FA1" title="$color-1 #A88FA1"></div>
+            <div class="swatch" style="background:#FFC857" title="$color-2 #FFC857"></div>
+            <div class="swatch" style="background:#48E5C2" title="$color-3 #48E5C2"></div>
+          </div>
+          <div class="meta"><span class="label">$color-1</span> <code>#A88FA1</code> • <span class="label">$color-2</span> <code>#FFC857</code> • <span class="label">$color-3</span> <code>#48E5C2</code></div>
+        </section>
+
+        <!-- Tangerine + Cyan + Taupe -->
+        <section class="card" style="--h1:#FF9E4A; --h2:#37C6F5; --h3:#9F8C82;">
+          <div class="sample">
+            <h1>H1 – Tangerine #FF9E4A</h1>
+            <h2>H2 – Cyan #37C6F5</h2>
+            <h3>H3 – Taupe #9F8C82</h3>
+          </div>
+          <div class="swatches">
+            <div class="swatch" style="background:#9F8C82" title="$color-1 #9F8C82"></div>
+            <div class="swatch" style="background:#FF9E4A" title="$color-2 #FF9E4A"></div>
+            <div class="swatch" style="background:#37C6F5" title="$color-3 #37C6F5"></div>
+          </div>
+          <div class="meta"><span class="label">$color-1</span> <code>#9F8C82</code> • <span class="label">$color-2</span> <code>#FF9E4A</code> • <span class="label">$color-3</span> <code>#37C6F5</code></div>
+        </section>
+
+        <!-- Apricot + Orchid + Clay -->
+        <section class="card" style="--h1:#FFB074; --h2:#8B7CFF; --h3:#B78F7A;">
+          <div class="sample">
+            <h1>H1 – Apricot #FFB074</h1>
+            <h2>H2 – Orchid #8B7CFF</h2>
+            <h3>H3 – Clay #B78F7A</h3>
+          </div>
+          <div class="swatches">
+            <div class="swatch" style="background:#B78F7A" title="$color-1 #B78F7A"></div>
+            <div class="swatch" style="background:#FFB074" title="$color-2 #FFB074"></div>
+            <div class="swatch" style="background:#8B7CFF" title="$color-3 #8B7CFF"></div>
+          </div>
+          <div class="meta"><span class="label">$color-1</span> <code>#B78F7A</code> • <span class="label">$color-2</span> <code>#FFB074</code> • <span class="label">$color-3</span> <code>#8B7CFF</code></div>
+        </section>
+      </div>
+
+      <h2 style="font-size:1.4rem; margin:2.5rem 0 .5rem; border-bottom: 2px solid rgba(255,255,255,.15); padding-bottom:.35rem;">Accent Alternatives (Single Color Options)</h2>
+      <p class="meta">Three blue variants that pop against <code>#635d59</code>. Each card shows only H2 using that color (underline tinted at 85%).</p>
+
+      <div class="grid">
+        <!-- Accent Alt 1 — Sky Pop -->
+        <section class="card" style="--h1:#c9a764; --h2:#55C2FF; --h3:#968c78;">
+          <div class="sample">
+            <h2>H2 – 55C2FF (Sky Pop)</h2>
+          </div>
+          <div class="swatches">
+            <div class="swatch" style="background:#55C2FF" title="#55C2FF"></div>
+          </div>
+          <div class="meta"><span class="label">Hex:</span> H2 <code>#55C2FF</code></div>
+        </section>
+
+        <!-- Accent Alt 2 — Bright Azure -->
+        <section class="card" style="--h1:#c9a764; --h2:#3AA8FF; --h3:#968c78;">
+          <div class="sample">
+            <h2>H2 – 3AA8FF (Bright Azure)</h2>
+          </div>
+          <div class="swatches">
+            <div class="swatch" style="background:#3AA8FF" title="#3AA8FF"></div>
+          </div>
+          <div class="meta"><span class="label">Hex:</span> H2 <code>#3AA8FF</code></div>
+        </section>
+
+        <!-- Accent Alt 3 — Deep Blue -->
+        <section class="card" style="--h1:#c9a764; --h2:#1D9BF0; --h3:#968c78;">
+          <div class="sample">
+            <h2>H2 – 1D9BF0 (Deep Blue)</h2>
+          </div>
+          <div class="swatches">
+            <div class="swatch" style="background:#1D9BF0" title="#1D9BF0"></div>
+          </div>
+          <div class="meta"><span class="label">Hex:</span> H2 <code>#1D9BF0</code></div>
+        </section>
+      </div>
+    </div>
+  </body>
+  </html>
