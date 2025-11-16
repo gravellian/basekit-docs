@@ -16,19 +16,47 @@ This guide installs a fresh site using the BaseKit base theme + Recipes so you c
 - Database + web server (or Lando/DDEV)
 - SSH access to GitHub `gravellian` repos (added SSH key)
 
-## 1) Create a Drupal Project
+## 0) Quick Start: Composer First, Then Lando (Drupal 11)
 
-You can start from the official template or a company template.
+Starting with host Composer keeps tools simple and avoids depending on Composer inside Lando images. These steps assume an empty directory.
+
+```
+# 1. Create project directory and enter it
+mkdir dev.justsomeguypainting.com2
+cd dev.justsomeguypainting.com2
+
+# 2. Create a Drupal 11 project (web as webroot)
+composer create-project drupal/recommended-project:11.x .
+
+# 3. Add BaseKit repositories to composer.json (see section 2a below),
+#    then require Drush + BaseKit packages
+composer require drush/drush
+composer require gravellian/basekit:dev-main gravellian/basekit-recipe:dev-main -W
+
+# 4. Initialize a Lando Drupal 11 app for this codebase
+lando init \
+  --source cwd \
+  --recipe drupal11 \
+  --webroot web \
+  --name dev.justsomeguypainting.com2
+
+# 5. Start the environment
+lando start
+
+# 6. Install Drupal (adjust DB URL if you changed defaults)
+lando drush site:install --db-url=mysql://drupal11:drupal11@database/drupal11 -y
+
+# 7. Show connection info (URLs, DB creds, etc.)
+lando info
+```
+
+## 1) Create a Drupal Project (non‑Lando variant)
+
+If you are not using Lando, you can still start from the official template or a company template:
 
 ```
 composer create-project drupal/recommended-project mysite
 cd mysite
-```
-
-Optional (Lando):
-
-```
-lando start
 ```
 
 ## 2) Require BaseKit Theme + Recipes
@@ -47,22 +75,22 @@ Add VCS repos and require packages in `composer.json` (merge these into existing
 ]
 ```
 
-2) extra.installer-paths (edit only the custom themes line; keep all your existing paths):
+2) extra.installer-paths (optional — for most projects you can keep the defaults that install BaseKit under `web/themes/contrib`; only change this if you intentionally want a different layout):
 
 ```
 "extra": {
   "installer-paths": {
     "web/themes/custom/{$name}": [
-      "type:drupal-theme",
-      "gravellian/basekit"
+      "type:drupal-custom-theme"
     ]
   }
 }
 ```
 
 Notes:
-- If your project uses `type:drupal-custom-theme` already, keep that type instead of `type:drupal-theme` and still add `"gravellian/basekit"` to the array.
-- Do not add any installer-path for `drupal-recipe`.
+- For a standard `drupal/recommended-project`, you do not need to change installer paths for BaseKit; it will install to `web/themes/contrib/basekit` by default.
+- If your project uses `type:drupal-custom-theme` already for custom themes, keep that type as-is.
+- Do not add any installer-path for `drupal-recipe`; let core unpack recipes into `recipes/`.
 
 3) config.allow-plugins (ensure these are allowed):
 
@@ -124,8 +152,17 @@ bash web/themes/contrib/basekit/subtheme-starter/scripts/new-subtheme.sh mysite 
 Build and enable it:
 
 ```
-cd web/themes/custom/mysite && lando npm install && lando gulp
-lando drush then mysite -y && lando drush cset system.theme default mysite -y && lando drush cr
+# Build theme assets (recommended: on the host)
+cd web/themes/custom/mysite
+npm install
+npm run build   # or: npx gulp
+
+# Enable BaseKit + sub-theme inside Lando
+cd ../../../..
+lando drush then basekit -y
+lando drush then mysite -y
+lando drush cset system.theme default mysite -y
+lando drush cr
 ```
 
 ### Option B — Manual sub‑theme
@@ -168,9 +205,9 @@ libraries-override:
 
 ```
 // _tokens.scss
-@use '../basekit/scss/base/var/var_default';
+@use '../../contrib/basekit/scss/base/var/var_default';
 // To override:
-// @use '../basekit/scss/base/var/var_default' with (
+// @use '../../contrib/basekit/scss/base/var/var_default' with (
 //   $brand-primary: #4b7bec,
 //   $font-body: 'Inter', system-ui
 // );
@@ -182,6 +219,19 @@ libraries-override:
 @use 'block';
 ```
 
+If you keep these imports, make sure to define the corresponding partials:
+
+```
+// scss/_layout.scss
+@use './_tokens';
+
+// scss/_navigation.scss
+@use './_tokens';
+
+// scss/_block.scss
+@use './_tokens';
+```
+
 - Component stubs (per SDC) importing BaseKit implementation:
 
 ```
@@ -190,12 +240,12 @@ libraries-override:
 @use '../../../basekit/components/hero_headline/hero_headline';
 ```
 
-Build CSS (Lando):
+Build CSS (typically on the host):
 
 ```
 cd web/themes/custom/<subtheme>
-lando npm install
-lando gulp
+npm install
+npm run build   # or: npx gulp
 ```
 
 ## 4) Enable Theme(s)
@@ -213,11 +263,11 @@ lando drush cset system.theme default <subtheme> -y
 Apply the aggregate recipe (base + features) or start with base only.
 
 ```
-# Aggregate
-php core/scripts/drupal recipe gravellian/basekit-recipe:recipes/site
+# Aggregate (Lando + recommended-project webroot)
+lando php web/core/scripts/drupal recipe recipes/basekit-recipe/recipes/site
 
 # Or base only
-php core/scripts/drupal recipe gravellian/basekit-recipe:recipes/basekit
+lando php web/core/scripts/drupal recipe recipes/basekit-recipe/recipes/basekit
 
 lando drush cim -y && lando drush updb -y && lando drush cr
 ```
@@ -274,9 +324,9 @@ composer update gravellian/basekit-docs -W
 - Re‑apply recipes and rebuild:
 
 ```
-php core/scripts/drupal recipe gravellian/basekit-recipe:recipes/site
+lando php web/core/scripts/drupal recipe recipes/basekit-recipe/recipes/site
 lando drush cim -y && lando drush updb -y && lando drush cr
-cd web/themes/custom/<subtheme> && lando gulp
+cd web/themes/custom/<subtheme> && npm run build
 ```
 
 ## Notes
@@ -284,3 +334,4 @@ cd web/themes/custom/<subtheme> && lando gulp
 - Recipes don’t install Composer deps; require BaseKit via Composer and enable it.
 - Do not map `drupal-recipe` under `extra.installer-paths`; let `drupal/core-recipe-unpack` unpack packages into `recipes/` automatically.
 - Prefer Layout Builder placements over theme‑region blocks. If you ship region blocks in recipes, add `config_actions` to map `theme:` to your sub‑theme.
+- If you see an error about a missing `PluginExists` validation constraint when applying recipes, ensure any module providing that constraint is required and enabled before running the `recipe` command.
