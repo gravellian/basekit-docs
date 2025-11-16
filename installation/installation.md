@@ -260,25 +260,58 @@ lando drush cset system.theme default <subtheme> -y
 
 ## 5) Apply Recipes (Config)
 
-Apply the aggregate recipe (base + features) or start with base only.
+Apply the aggregate recipe (base + features). If the recipe CLI errors inside Lando, use the fallback below.
 
 ```
 # Aggregate (Lando + recommended-project webroot)
 lando php web/core/scripts/drupal recipe recipes/basekit-recipe/recipes/site
 
-# Or base only
+# Or apply individually
 lando php web/core/scripts/drupal recipe recipes/basekit-recipe/recipes/basekit
+lando php web/core/scripts/drupal recipe recipes/basekit-recipe/recipes/article
+lando php web/core/scripts/drupal recipe recipes/basekit-recipe/recipes/blocks/hero_headline
+lando php web/core/scripts/drupal recipe recipes/basekit-recipe/recipes/blocks/hero_announcement
 
 lando drush cim -y && lando drush updb -y && lando drush cr
 ```
 
 You can comment/uncomment features in your own aggregator or apply individual feature recipes directly (e.g., `recipes/article`, `recipes/blocks/hero_headline`).
 
+### If the recipe CLI fails inside Lando (fallback that always works)
+
+Some Lando images trigger a validator quirk during `drupal recipe`. In that case:
+
+1) Ensure required modules are enabled (the base recipe would normally install these):
+
+```
+lando drush en -y block block_content field text image media responsive_image views editor rest workflows node taxonomy layout_builder
+```
+
+2) Import config from the unpacked recipe directories, then run updates and rebuild caches:
+
+```
+lando drush cim -y --partial --source=/app/recipes/basekit-recipe/recipes/basekit/config
+lando drush cim -y --partial --source=/app/recipes/basekit-recipe/recipes/article/config
+lando drush cim -y --partial --source=/app/recipes/basekit-recipe/recipes/blocks/hero_headline/config
+lando drush cim -y --partial --source=/app/recipes/basekit-recipe/recipes/blocks/hero_announcement/config
+
+lando drush updb -y && lando drush cr
+```
+
 ## 6) Verify
 
 - Media types, responsive image styles, and image styles exist
 - Custom block types you enabled via recipes are available
 - BaseKit templates/SDCs render; sub‑theme CSS is loaded (inspect library names)
+
+If pages look unstyled on a brand‑new install, ensure your sub‑theme loads BaseKit base CSS:
+
+```
+# web/themes/custom/<subtheme>/<subtheme>.info.yml
+libraries:
+  - basekit/base
+  - <subtheme>/base
+```
 
 ## Updating Later
 
