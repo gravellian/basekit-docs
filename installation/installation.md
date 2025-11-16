@@ -143,10 +143,21 @@ Create a minimal sub‑theme so site branding stays separate from BaseKit.
 
 ### Option A — Scaffold from the starter (quickest)
 
-From project root, generate a ready-to-edit sub-theme (BaseKit installs under `web/themes/contrib` by default):
+From project root, generate a ready-to-edit sub-theme (BaseKit installs under `web/themes/contrib` by default). This block is safe to run multiple times; it ensures tokens are replaced, CSS is built, and the theme is set as default/admin:
 
 ```
+# Scaffold
 bash web/themes/contrib/basekit/subtheme-starter/scripts/new-subtheme.sh mysite "My Site"
+# Verify no tokens remain
+rg "__THEME_NAME__|__THEME_MACHINE__" web/themes/custom/mysite -n || echo "tokens replaced OK"
+# Build subtheme assets
+cd web/themes/custom/mysite && npm install && npm run build && cd ../../../..
+# Enable BaseKit + subtheme, set default & admin theme
+lando drush then basekit -y
+lando drush then mysite -y
+lando drush cset system.theme default mysite -y
+lando drush cset system.theme admin mysite -y
+lando drush cr
 ```
 
 Build and enable it:
