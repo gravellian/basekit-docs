@@ -82,6 +82,62 @@ Each sub‑theme component SCSS is a thin stub that pulls in tokens and the Base
 
 This keeps all component logic in `basekit`. The sub‑theme only contributes token values.
 
+## Overriding Component SCSS (Sub‑theme)
+
+You have three options, from least to most invasive:
+
+- Token overrides (preferred)
+  - Adjust variables in `scss/_tokens.scss`. Because BaseKit styles use tokens with `!default`, brand changes cascade without touching component SCSS.
+
+- Extend defaults (import and add rules)
+  - Keep the base defaults and add site‑specific tweaks below your import.
+
+    // web/themes/custom/<site>/components/<component>/<component>.scss
+    @use '../../scss/_tokens';
+    @use '../../../basekit/components/<component>/<component>';
+
+    // Your overrides here (selectors match BaseKit markup)
+    .block-type--<component> { /* ... */ }
+
+- Replace entirely (do not import)
+  - Implement all styles from scratch; do not import BaseKit’s component SCSS. This fully replaces the look while keeping the same markup.
+
+    // web/themes/custom/<site>/components/<component>/<component>.scss
+    @use '../../scss/_tokens';
+    .block-type--<component> { /* full implementation */ }
+
+Notes
+- Ensure your sub‑theme maps each BaseKit component library to your own in `<site>.info.yml` under `libraries-override` so only your compiled CSS loads.
+- Gulp includePaths must allow `@use '../../../basekit/...';` to resolve. The starter already sets:
+  - includePaths: `['scss', '../basekit/scss', '../basekit/components']`
+- After changes, rebuild CSS and clear caches:
+  - cd `web/themes/custom/<site>` && `npm run build`
+  - `lando drush cr`
+
+## Overriding Component Twig (Sub‑theme)
+
+Drupal’s theme resolution checks the sub‑theme first, then the base theme. To override component markup:
+
+- Full component template
+  - Copy from BaseKit to the same path in your sub‑theme and edit:
+    - From: `web/themes/contrib/basekit/components/<component>/<component>.twig` (or `.html.twig`)
+    - To:   `web/themes/custom/<site>/components/<component>/<component>.twig`
+
+- Partial templates
+  - Copy only the partial you need:
+    - From: `web/themes/contrib/basekit/components/<component>/partials/<name>.html.twig`
+    - To:   `web/themes/custom/<site>/components/<component>/partials/<name>.html.twig`
+
+- Libraries
+  - Keep library names the same and use `libraries-override` in your sub‑theme to point to your CSS so the BaseKit component attaches still work.
+
+- Clear caches after Twig changes
+  - `lando drush cr`
+
+Tips
+- Prefer small partial overrides to keep diffs minimal and ease BaseKit updates.
+- If you add new BEM elements/modifiers in Twig, reflect them in your component SCSS so selectors stay in sync.
+
 ## Build Pipeline
 
 Sub‑theme Gulp has been updated so imports from `basekit` resolve cleanly.
