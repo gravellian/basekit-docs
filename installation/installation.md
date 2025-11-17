@@ -137,6 +137,53 @@ Install packages:
 composer require gravellian/basekit:dev-main gravellian/basekit-recipe:dev-main -W
 ```
 
+### 2b) Always receive the latest changes (dev-main)
+
+- Use branch constraints to pick up new commits when you run `composer update`:
+  - `gravellian/basekit: dev-main`
+  - `gravellian/basekit-recipe: dev-main`
+- Update flow:
+  - `composer update gravellian/basekit gravellian/basekit-recipe -W`
+  - Apply recipes and import config (see section 5).
+
+### 2c) Local workspace development with a path repository (optional)
+
+If you keep local workspace copies next to your site (e.g., `../basekit-recipe`, `../basekit-docs`), add path repositories so you can develop and test without pushing:
+
+```
+"repositories": {
+  "basekit-recipe-path": { "type": "path", "url": "../basekit-recipe", "options": { "symlink": false } },
+  "basekit-docs-path":   { "type": "path", "url": "../basekit-docs",   "options": { "symlink": false } }
+}
+```
+
+Notes:
+- Set `symlink: false` so Composer mirrors files into the project; Lando containers can then read them.
+- Remove any overlapping VCS repo entries for these packages so the path repos are used.
+
+### 2d) Installing the Docs package
+
+To install `gravellian/basekit-docs` into `docs/`, add the installer to Composer and map the type to the `docs/` folder:
+
+```
+composer require oomphinc/composer-installers-extender:^2.0 -W
+
+// composer.json
+"config": {
+  "allow-plugins": {
+    "oomphinc/composer-installers-extender": true
+  }
+},
+"extra": {
+  "installer-types": ["gravellian-docs"],
+  "installer-paths": {
+    "docs/": ["type:gravellian-docs"]
+  }
+}
+
+composer require gravellian/basekit-docs:dev-main -W
+```
+
 ## 3) Create a Sub‑Theme (recommended)
 
 Create a minimal sub‑theme so site branding stays separate from BaseKit.
