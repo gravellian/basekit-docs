@@ -1,6 +1,6 @@
 # BaseKit Base Theme
 
-This project now uses a shared base theme named `basekit` that owns all structure (Twig, SDC components, templates, and default styles). The site theme `gravelle1` is a sub‑theme that only provides brand tokens (colors/spacing/type) and compiled CSS, keeping behavior and markup centralized.
+This project now uses a shared base theme named `basekit` that owns all structure (Twig, SDC components, templates, and default styles). Site themes like `gravelle1` or `jsg1` are sub‑themes that primarily provide brand tokens (colors/spacing/type) and additional CSS, keeping behavior and markup centralized in BaseKit.
 
 What you get
 - Single source of truth for custom blocks/SDCs and templates in `basekit`.
@@ -9,44 +9,48 @@ What you get
 
 ## Layout & Key Files
 
-- Base theme: `web/themes/custom/basekit`
-  - Tokens: `web/themes/custom/basekit/scss/base/var/_var_default.scss`
-  - Sass entry: `web/themes/custom/basekit/scss/styles.scss`
-  - Component styles: `web/themes/custom/basekit/components/<component>/<component>.scss`
-  - Libraries: `web/themes/custom/basekit/basekit.libraries.yml`
-  - Templates/SDCs: `web/themes/custom/basekit/components/**`, `web/themes/custom/basekit/templates/**`
+- Base theme: `basekit`
+  - Source of truth: separate repo (e.g., `../basekit` in this workspace).
+  - Installed in the site via Composer (typically under `web/themes/contrib/basekit`; do not edit the mirrored copy).
+  - Tokens: `basekit/scss/base/var/_var_default.scss` (in the BaseKit repo).
+  - Sass entry: `basekit/scss/styles.scss`.
+  - Component styles: `basekit/components/<component>/<component>.scss`.
+  - Libraries: `basekit/basekit.libraries.yml`.
+  - Templates/SDCs: `basekit/components/**`, `basekit/templates/**`.
 
-- Sub‑theme: `web/themes/custom/gravelle1`
+- Sub‑theme example: `web/themes/custom/gravelle1`
   - Declares base: `web/themes/custom/gravelle1/gravelle1.info.yml` (`base theme: basekit`)
   - Token config: `web/themes/custom/gravelle1/scss/_tokens.scss`
   - Global SCSS: `web/themes/custom/gravelle1/scss/styles.scss`
   - Component stubs: `web/themes/custom/gravelle1/components/<component>/<component>.scss`
-  - Library overrides: `web/themes/custom/gravelle1/gravelle1.info.yml`
+  - Optional library overrides for individual components: `web/themes/custom/gravelle1/gravelle1.info.yml`
   - Gulp build: `web/themes/custom/gravelle1/gulpfile.js`
 
 ## How Inheritance Works
 
 - Drupal resolves templates and libraries from the sub‑theme first; if not present, it falls back to `basekit`.
 - SDC Twig in `basekit` attaches `basekit/<component>` libraries.
-- The sub‑theme redirects those to its own compiled CSS via `libraries-override` so the markup comes from `basekit` but styles come from `gravelle1`.
+- By default, the sub‑theme loads `basekit/base` first, then its own `base` library to layer custom styling on top.
+- For components where the sub‑theme wants fully custom CSS, it can override a specific BaseKit library (e.g. `basekit/hero_headline`) and map it to a sub‑theme library.
 
-Snippet (already present): `web/themes/custom/gravelle1/gravelle1.info.yml`
+Snippet (current pattern): `web/themes/custom/gravelle1/gravelle1.info.yml`
 
-  libraries-override:
-    basekit/base: false
-    basekit/messages: false
-    basekit/pushy: false
-    basekit/fonts.typography: false
-    basekit/hero_announcement: gravelle1/hero_announcement
-    basekit/hero_headline: gravelle1/hero_headline
-    basekit/media_text: gravelle1/media_text
-    basekit/quote_feature: gravelle1/quote_feature
-    basekit/grid_topics: gravelle1/grid_topics
-    basekit/text_rich: gravelle1/text_rich
-    basekit/media_slider: gravelle1/media_slider
-    basekit/image_slider: gravelle1/image_slider
+```yaml
+libraries:
+  # Load BaseKit base CSS first, then layer gravelle1 overrides.
+  - basekit/base
+  - gravelle1/base
 
-This ensures no double‑loading of `basekit` CSS and routes each component’s library to sub‑theme CSS.
+# When you port a component to the sub-theme and ship your own CSS,
+# you can opt into overrides selectively (leave commented until ready):
+# libraries-override:
+#   basekit/messages: false
+#   basekit/pushy: false
+#   basekit/fonts.typography: false
+#   # Map BaseKit component libraries to sub-theme outputs if you compile per-component CSS
+#   # basekit/hero_headline: gravelle1/hero_headline
+#   # basekit/hero_announcement: gravelle1/hero_announcement
+```
 
 ## Token Overrides (Sass Modules)
 
@@ -54,60 +58,115 @@ Base tokens live in `basekit` and use `!default`. Configure them from the sub‑
 
 - Sub‑theme token module: `web/themes/custom/gravelle1/scss/_tokens.scss`
 
-  @use '../basekit/scss/base/var/var_default';
-  // To override, switch to:
-  // @use '../basekit/scss/base/var/var_default' with (
+  ```scss
+  @use 'base/var/var_default';
+  // Or, to override BaseKit tokens from the sub‑theme:
+  // @use 'base/var/var_default' with (
   //   $brand-primary: #4b7bec,
   //   $brand-accent: #ff3366,
-  //   $font-body: 'Inter', system-ui,
+  //   $brand-neutral: #8a7f76,
+  //   $text-base: #eae6df,
+  //   $font-body: ('Inter', system-ui),
+  //   $font-heading: ('Archivo', sans-serif),
   //   $siteg: 1.25em
   // );
+  ```
 
 - Sub‑theme global stylesheet: `web/themes/custom/gravelle1/scss/styles.scss`
 
+  ```scss
   @use './_tokens';
   @use 'layout';
   @use 'navigation';
   @use 'block';
   @use 'components/button';
+  ```
 
 Order matters: configure tokens before importing anything that uses them.
 
-## Component SCSS: Thin Stubs
+## Overriding BaseKit Templates and Styling
 
-Each sub‑theme component SCSS is a thin stub that pulls in tokens and the BaseKit implementation. Example: `web/themes/custom/gravelle1/components/hero_headline/hero_headline.scss`
+### Overriding BaseKit Templates (Twig)
 
-  @use '../../scss/_tokens';
-  @use '../../../basekit/components/hero_headline/hero_headline';
+Drupal’s theme resolution checks the sub‑theme first, then the base theme. To override component markup:
 
-This keeps all component logic in `basekit`. The sub‑theme only contributes token values.
+- Full component template
+  - Copy from BaseKit to the same path in your sub‑theme and edit:
+    - From: `web/themes/contrib/basekit/components/<component>/<component>.twig` (or `.html.twig`)
+    - To:   `web/themes/custom/<site>/components/<component>/<component>.twig`
 
-## Overriding Component SCSS (Sub‑theme)
+- Partial templates
+  - Copy only the partial you need:
+    - From: `web/themes/contrib/basekit/components/<component>/partials/<name>.html.twig`
+    - To:   `web/themes/custom/<site>/components/<component>/partials/<name>.html.twig`
+
+- Clear caches after Twig changes:
+  - `lando drush cr`
+
+Prefer small partial overrides to keep diffs minimal and ease BaseKit updates.
+
+### Overriding Global Styling (layout, typography)
+
+- Configure brand tokens in the sub‑theme `_tokens.scss` as shown above.
+- In any sub‑theme SCSS file that needs BaseKit mixins/variables:
+
+  ```scss
+  @use '../_tokens';
+  @use 'base' as base;
+
+  body {
+    font-family: base.$font-body;
+    color: base.$color-text;
+  }
+  ```
+
+This keeps all global layout and typography logic in BaseKit while allowing per‑site branding via tokens.
+
+### Overriding Component Styling (SCSS)
+
+Each sub‑theme component SCSS is a thin stub that pulls in tokens and the BaseKit implementation.
+
+Example: `web/themes/custom/gravelle1/components/hero_headline/hero_headline.scss`
+
+```scss
+@use '../../scss/_tokens';
+@use 'base' as base;
+@use 'basekit/components/hero_headline/hero_headline';
+
+.block-type--hero_headline.block-view-mode--default {
+  // site‑specific tweaks
+  background-color: base.$surface-2;
+}
+```
 
 You have three options, from least to most invasive:
 
-- Token overrides (preferred)
+- **Token overrides (preferred)**
   - Adjust variables in `scss/_tokens.scss`. Because BaseKit styles use tokens with `!default`, brand changes cascade without touching component SCSS.
 
-- Extend defaults (import and add rules)
-  - Keep the base defaults and add site‑specific tweaks below your import.
+- **Extend defaults (import and add rules)**
+  - Keep the base defaults and add site‑specific tweaks below your import, as in the example above.
+  - BaseKit’s component CSS still loads (via `basekit/base`), and your rules win by being at least as specific.
 
+- **Replace entirely (SCSS + optional library override)**
+  - Implement all styles from scratch; optionally skip importing BaseKit’s component SCSS.
+
+    ```scss
     // web/themes/custom/<site>/components/<component>/<component>.scss
     @use '../../scss/_tokens';
-    @use '../../../basekit/components/<component>/<component>';
+    @use 'base' as base;
 
-    // Your overrides here (selectors match BaseKit markup)
-    .block-type--<component> { /* ... */ }
-
-- Replace entirely (do not import)
-  - Implement all styles from scratch; do not import BaseKit’s component SCSS. This fully replaces the look while keeping the same markup.
-
-    // web/themes/custom/<site>/components/<component>/<component>.scss
-    @use '../../scss/_tokens';
     .block-type--<component> { /* full implementation */ }
+    ```
+
+  - If you want your CSS to replace the BaseKit component CSS for that library, map it in `<site>.info.yml`:
+
+    ```yaml
+    libraries-override:
+      basekit/<component>: <site>/<component>
+    ```
 
 Notes
-- Ensure your sub‑theme maps each BaseKit component library to your own in `<site>.info.yml` under `libraries-override` so only your compiled CSS loads.
 - Gulp includePaths must allow `@use '../../../basekit/...';` to resolve. The starter already sets:
   - includePaths: `['scss', '../basekit/scss', '../basekit/components']`
 - After changes, rebuild CSS and clear caches:
@@ -143,7 +202,7 @@ Tips
 Sub‑theme Gulp has been updated so imports from `basekit` resolve cleanly.
 
 - `web/themes/custom/gravelle1/gulpfile.js`
-  - includePaths: `['scss', '../basekit/scss', '../basekit/components']`
+  - includePaths: `['scss', '../../contrib/basekit/scss', '../../contrib/basekit/components']`
 
 Build commands:
 - cd `web/themes/custom/gravelle1` && `lando npm install` && `lando gulp`
