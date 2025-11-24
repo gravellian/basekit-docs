@@ -10,6 +10,15 @@ This guide installs a fresh site using the BaseKit base theme + Recipes so you c
   - Feature recipes (opt‑in): `recipes/article`, `recipes/blocks/*`
   - `recipes/site` — aggregate of base + features
 
+## Install Flow (high level)
+
+1) Create a new project directory (e.g., `dev.basekitsite.com1`) and init a Drupal 11 codebase via Composer.  
+2) Add BaseKit repositories (or local path repos such as `../basekit` and `../basekit-recipe`) and require the packages.  
+3) Initialize Lando for the codebase and start services.  
+4) Install Drupal, then apply the BaseKit recipes (`recipes/site`) to pull in config.  
+5) Scaffold a sub‑theme from BaseKit, build its assets, and set it as the default/admin theme.  
+6) Create your administrator account and verify default blocks/layouts are in place.
+
 ## Prerequisites
 
 - PHP 8.1+ and Composer
@@ -18,12 +27,12 @@ This guide installs a fresh site using the BaseKit base theme + Recipes so you c
 
 ## 0) Quick Start: Composer First, Then Lando (Drupal 11)
 
-Starting with host Composer keeps tools simple and avoids depending on Composer inside Lando images. These steps assume an empty directory.
+Starting with host Composer keeps tools simple and avoids depending on Composer inside Lando images. These steps assume an empty directory. Replace `dev.basekitsite.com1` with your project name if you prefer a different host.
 
 ```
 # 1. Create project directory and enter it
-mkdir dev.justsomeguypainting.com2
-cd dev.justsomeguypainting.com2
+mkdir dev.basekitsite.com1
+cd dev.basekitsite.com1
 
 # 2. Create a Drupal 11 project (web as webroot)
 composer create-project drupal/recommended-project:11.x .
@@ -38,7 +47,7 @@ lando init \
   --source cwd \
   --recipe drupal11 \
   --webroot web \
-  --name dev.justsomeguypainting.com2
+  --name dev.basekitsite.com1
 
 # 5. Start the environment
 lando start
@@ -48,6 +57,25 @@ lando drush site:install --db-url=mysql://drupal11:drupal11@database/drupal11 -y
 
 # 7. Show connection info (URLs, DB creds, etc.)
 lando info
+```
+
+## 0b) Quick Start with the BaseKit project template (bundled sub‑theme)
+
+Use the project template when you want BaseKit, recipes, docs, and the starter sub‑theme (`basekit_site`) pre‑scaffolded.
+
+```
+mkdir dev.basekitsite.com1
+cd dev.basekitsite.com1
+# Optional: add local path repos for basekit/basekit-recipe/basekit-docs if they sit in sibling folders.
+composer create-project gravellian/basekit-project:dev-main .
+lando init --source cwd --recipe drupal11 --webroot web --name dev.basekitsite.com1
+lando start
+lando drush site:install --db-url=mysql://drupal11:drupal11@database/drupal11 -y
+# Apply the aggregate recipe (config + modules), rebuild cache
+lando php web/core/scripts/drupal recipe recipes/basekit-recipe/recipes/site || \
+  lando drush cim -y && lando drush updb -y
+lando drush cr
+# BaseKit + basekit_site are included; basekit_setup installs blocks/menus on the default theme.
 ```
 
 ## 1) Create a Drupal Project (non‑Lando variant)
