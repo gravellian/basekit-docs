@@ -174,20 +174,61 @@ composer require gravellian/basekit:dev-main gravellian/basekit-recipe:dev-main 
   - `composer update gravellian/basekit gravellian/basekit-recipe -W`
   - Apply recipes and import config (see section 5).
 
-### 2c) Local workspace development with a path repository (optional)
+### 2c) Local workspace development with `composer.local.json` (optional)
 
-If you keep local workspace copies next to your site (e.g., `../basekit-recipe`, `../basekit-docs`), add path repositories so you can develop and test without pushing:
+Keep BaseKit workspace repos (e.g., `../basekit`, `../basekit-recipe`, `../basekit-docs`) next to the site and add path repositories **in a local override**:
+
+1. Create `composer.local.json` beside `composer.json`:
 
 ```
-"repositories": {
-  "basekit-recipe-path": { "type": "path", "url": "../basekit-recipe", "options": { "symlink": false } },
-  "basekit-docs-path":   { "type": "path", "url": "../basekit-docs",   "options": { "symlink": false } }
+{
+  "repositories": {
+    "basekit":        { "type": "path", "url": "../basekit",        "options": { "symlink": true } },
+    "basekit-recipe": { "type": "path", "url": "../basekit-recipe", "options": { "symlink": true } },
+    "basekit-docs":   { "type": "path", "url": "../basekit-docs",   "options": { "symlink": true } }
+  },
+  "config": {
+    "allow-plugins": {
+      "composer/installers": true,
+      "drupal/core-composer-scaffold": true,
+      "drupal/core-project-message": true,
+      "drupal/core-recipe-unpack": true,
+      "oomphinc/composer-installers-extender": true,
+      "phpstan/extension-installer": true,
+      "dealerdirect/phpcodesniffer-composer-installer": true,
+      "php-http/discovery": true,
+      "php-tuf/composer-integration": true
+    }
+  }
 }
 ```
 
+2. Seed `composer.local.lock` once (`cp composer.lock composer.local.lock`) so Composer can perform partial updates with the override.
+
+3. Mount the workspace folders into Lando so the symlinks resolve inside containers. Example:
+
+```yaml
+# .lando.yml
+services:
+  appserver:
+    overrides:
+      volumes:
+        - ../basekit:/basekit
+        - ../basekit-recipe:/basekit-recipe
+        - ../basekit-docs:/basekit-docs
+  node:
+    overrides:
+      volumes:
+        - ../basekit:/basekit
+        - ../basekit-recipe:/basekit-recipe
+        - ../basekit-docs:/basekit-docs
+```
+
+4. Run Composer with the override (`COMPOSER=composer.local.json composer update gravellian/basekit* -W`), or use a helper script such as `./scripts/site-task.sh getBase` to refresh BaseKit + recipes/docs, apply config, and rebuild caches/assets.
+
 Notes:
-- Set `symlink: false` so Composer mirrors files into the project; Lando containers can then read them.
-- Remove any overlapping VCS repo entries for these packages so the path repos are used.
+- Keep `composer.local.*` out of Git (they are for local development only).
+- Remove overlapping VCS repo entries for these packages so the path repos take precedence.
 
 ### 2d) Installing the Docs package
 

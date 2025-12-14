@@ -64,7 +64,22 @@ cd web/themes/custom/<subtheme> && lando gulp
 
 Notes
 - Keep `web/themes/contrib/basekit/` (or custom/basekit/) ignored in the site’s Git.
-- If you run Composer inside a container, the path must be visible inside the container; or run Composer on the host for this step.
+- If you use Lando, add the workspace folders as bind mounts so the symlink resolves inside containers, e.g.:
+
+  ```yaml
+  services:
+    appserver:
+      overrides:
+        volumes:
+          - ../basekit:/basekit
+    node:
+      overrides:
+        volumes:
+          - ../basekit:/basekit
+  ```
+
+  (Repeat for `../basekit-recipe` or other workspaces you mirror.)
+- Seed `composer.local.lock` with `cp composer.lock composer.local.lock` when using `composer.local.json` so `composer update gravellian/basekit -W` can run against the override.
 - When done, remove the path repo entry and run `composer update gravellian/basekit -W` to switch back to GitHub.
 
 ## Option B — VCS “source” install (real git checkout under web/themes)

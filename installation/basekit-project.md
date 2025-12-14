@@ -75,44 +75,32 @@ chmod +x scripts/*.sh
 ## Developer Notes
 - To begin theming the `basekit_site` subtheme, run `lando npm install` then `lando gulp compile` (or `lando gulp watch`).
 - The project includes composer-merge-plugin and composer-patches. Put overrides in `composer.local.json` (ignored) and patches in `patches/composer.patches.json`.
-- Use this `composer.local.json` beside `composer.json` when developing against local workspaces (merge plugin will include it automatically on install/update):
+- Recommended local override when you keep workspace clones (`../basekit*`) alongside the site:
 
   ```
   {
     "repositories": {
-      "basekit-project-path": {
-        "type": "path",
-        "url": "../basekit-project",
-        "options": {
-          "symlink": false
-        }
-      },
-      "basekit-path": {
-        "type": "path",
-        "url": "../basekit",
-        "options": {
-          "symlink": false
-        }
-      },
-      "basekit-docs-path": {
-        "type": "path",
-        "url": "../basekit-docs",
-        "options": {
-          "symlink": false
-        }
-      },
-      "basekit-recipe-path": {
-        "type": "path",
-        "url": "../basekit-recipe",
-        "options": {
-          "symlink": false
-        }
-      }
+      "basekit":        { "type": "path", "url": "../basekit",        "options": { "symlink": true } },
+      "basekit-recipe": { "type": "path", "url": "../basekit-recipe", "options": { "symlink": true } },
+      "basekit-docs":   { "type": "path", "url": "../basekit-docs",   "options": { "symlink": true } }
     },
     "config": {
-      "preferred-install": {
-        "gravellian/*": "source"
+      "allow-plugins": {
+        "composer/installers": true,
+        "drupal/core-composer-scaffold": true,
+        "drupal/core-project-message": true,
+        "drupal/core-recipe-unpack": true,
+        "oomphinc/composer-installers-extender": true,
+        "phpstan/extension-installer": true,
+        "dealerdirect/phpcodesniffer-composer-installer": true,
+        "php-http/discovery": true,
+        "php-tuf/composer-integration": true
       }
     }
   }
   ```
+
+  Tips:
+  - Keep `composer.local.json` and `composer.local.lock` out of Git. Seed the lock with `cp composer.lock composer.local.lock` so partial updates work.
+  - Mount the workspace folders into Lando (see `.lando.yml` example in the BaseKit development guide) so the symlinks resolve inside containers.
+  - After editing BaseKit/recipe/docs, run `./scripts/site-task.sh getBase` (host) to copy the latest files, apply recipes, and rebuild caches/theme assets.
