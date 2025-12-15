@@ -14,5 +14,6 @@
 - [Sass base module](setup/sass-base.md)
 - [Responsive template (auto-sizing)](setup/responsive-template.md)
 - [Custom Blocks](setup/custom-blocks.md)
+- [Block Styles & Overrides](setup/block-styles.md)
 - [Utility Belt](setup/utility-belt.md)
 - [Mobile Menu](setup/mobile-menu.md)
