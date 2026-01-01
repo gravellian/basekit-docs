@@ -16,7 +16,7 @@ What it exports (one import gives you all of these)
 - Variables from `_var_default.scss`
   - Layout: `$m-page-header`, `$d-pagew`, `$m-pagep`, `$d-pagep`, `$pagepad`
   - Colors: `$color-1..3`, `$gray`, `$white`, `$color-h*`, etc.
-  - Typography: `$font-body`, `$font-heading`, `$font-size-body`, `$line-height-body`, `$font-weight-*`
+  - Typography: `$font-size-body`, `$line-height-body`, `$font-weight-*` (font families are CSS variables)
   - Page: `$site-bgcolor`, `$page-bgcolor`
 - Breakpoint mixins (from `_mixins.scss`)
   - `@include desktop-small { … }`      // 768–1023px
@@ -74,7 +74,7 @@ Examples
 Conventions
 - Use `@use 'base' as *;` once at the top of each SCSS file that needs tokens/mixins.
 - Prefer the breakpoint mixins over hard‑coded media queries to keep breakpoints centralized.
-- The variables in `_var_default.scss` use `!default` to allow future configuration; for now, change theme tokens by editing that file.
+- The variables in `_var_default.scss` use `!default` to allow future configuration; font families are controlled via CSS variables (`--font-*`).
 
 Related docs
 - Editor Styles: `docs/setup/editor-styles.md`

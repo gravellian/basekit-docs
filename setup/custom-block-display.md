@@ -70,6 +70,38 @@ Wrapper ownership rules to avoid double wrappers:
 - Paragraphs: the field template owns the `.block-items` wrapper; components should not add another list wrapper.
 - EVA: the views template owns the `.block-items` wrapper; components render the provided markup inside their chrome.
 
+## SDC Data Flow (custom blocks)
+
+Use SDCs to own markup and layout. Pass clean data into SDC props from the block
+Twig template.
+
+Flow (example: `grid_topics`)
+
+1) Block template (data only)
+- Template: `basekit/templates/block/block--block-content--type--grid-topics.html.twig`
+- Reads raw values from the block entity (`field_block_title`, `field_block_text`,
+  `field_block_link`) and passes the `field_block_items` paragraph list to the SDC
+  as `props.items`.
+
+2) SDC template (markup + wrappers)
+- Template: `basekit/components/grid_topics/partials/default.html.twig`
+- Loops over `props.items` and reads paragraph entity fields directly:
+  - `item.entity.field_topic_title`
+  - `item.entity.field_topic_text.processed`
+  - `item.entity.field_topic_icon`
+  - `item.entity.field_topic_link`
+- Emits all wrapper markup and classes used by CSS.
+
+3) Formatting and processing
+- Text fields: use `.processed` where available to respect text formats.
+- Links: read `title` + `url` from the field item.
+- Media: render via Twig Tweak helpers when available (e.g., `drupal_entity()`).
+
+Rules of thumb
+- **Data is gathered in block Twig**; **markup is owned by SDC**.
+- Avoid `{{ content.field_* }}` in SDCs to prevent field wrapper noise.
+- Keep class names in SDC templates in sync with component SCSS.
+
 ## Styling: One Grid Selector
 
 - SCSS defines a responsive grid that both paths share:

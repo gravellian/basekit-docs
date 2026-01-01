@@ -336,7 +336,7 @@ libraries-override:
 // To override:
 // @use '../../contrib/basekit/scss/base/var/var_default' with (
 //   $brand-primary: #4b7bec,
-//   $font-body: 'Inter', system-ui
+//   $siteg: 1.25em
 // );
 
 // styles.scss
@@ -344,6 +344,17 @@ libraries-override:
 @use 'layout';
 @use 'navigation';
 @use 'block';
+```
+
+Font families are CSS variables; set them in your subtheme layout (loaded after
+basekit):
+
+```
+:root {
+  --font-body: 'Work Sans', 'Helvetica Neue', Arial, sans-serif;
+  --font-heading: 'Bungee', 'Arial Black', sans-serif;
+  --font-heading-narrow: 'Bungee Outline', 'Arial Black', sans-serif;
+}
 ```
 
 If you keep these imports, make sure to define the corresponding partials:

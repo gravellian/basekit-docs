@@ -13,6 +13,7 @@ What you get
   - Source of truth: separate repo (e.g., `../basekit` in this workspace).
   - Installed in the site via Composer (typically under `web/themes/contrib/basekit`; do not edit the mirrored copy).
   - Tokens: `basekit/scss/base/var/_var_default.scss` (in the BaseKit repo).
+  - Font defaults: `basekit/scss/layout/_page-format.scss` (`:root --font-*`).
   - Sass entry: `basekit/scss/styles.scss`.
   - Component styles: `basekit/components/<component>/<component>.scss`.
   - Libraries: `basekit/basekit.libraries.yml`.
@@ -54,7 +55,7 @@ libraries:
 
 ## Token Overrides (Sass Modules)
 
-Base tokens live in `basekit` and use `!default`. Configure them from the sub‑theme, then import BaseKit styles.
+Base tokens live in `basekit` and use `!default`. Configure them from the sub‑theme, then import BaseKit styles. (Font families are CSS variables, not Sass tokens.)
 
 - Sub‑theme token module: `web/themes/custom/gravelle1/scss/_tokens.scss`
 
@@ -66,8 +67,6 @@ Base tokens live in `basekit` and use `!default`. Configure them from the sub‑
   //   $brand-accent: #ff3366,
   //   $brand-neutral: #8a7f76,
   //   $text-base: #eae6df,
-  //   $font-body: ('Inter', system-ui),
-  //   $font-heading: ('Archivo', sans-serif),
   //   $siteg: 1.25em
   // );
   ```
@@ -115,12 +114,12 @@ Prefer small partial overrides to keep diffs minimal and ease BaseKit updates.
   @use 'base' as base;
 
   body {
-    font-family: base.$font-body;
+    font-family: var(--font-body);
     color: base.$color-text;
   }
   ```
 
-This keeps all global layout and typography logic in BaseKit while allowing per‑site branding via tokens.
+This keeps all global layout and typography logic in BaseKit while allowing per‑site branding via tokens and CSS variables.
 
 ### Overriding Component Styling (SCSS)
 
