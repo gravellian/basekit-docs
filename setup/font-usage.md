@@ -41,6 +41,9 @@ Use the heading mixins directly (for UI headings not inside `.body-style`):
 }
 ```
 
+BaseKit does not apply global `h2–h6` styles, so UI headings should opt in via
+mixins or utility classes.
+
 ## Component-level fonts
 
 Components should use typography mixins so they inherit token overrides:

@@ -110,6 +110,42 @@ h3 {
 }
 ```
 
+### Heading utility classes (selective use)
+
+Use the utility classes to apply heading styles only where needed (UI elements,
+custom blocks, etc.), without changing global `h2–h6` rules. BaseKit does not
+apply global `h2–h6` styles by default.
+
+```scss
+/* web/themes/custom/basekit_site/scss/_typography.scss */
+.ui-h2 { @include body-h2; }
+.ui-h3 { @include body-h3; }
+.ui-h4 { @include body-h4; }
+.ui-h5 { @include body-h5; }
+.ui-h6 { @include body-h6; }
+```
+
+```html
+<h3 class="ui-h3">Panel title</h3>
+```
+
+To customize the utilities, edit `_typography.scss` and add your tweaks after
+the mixins (letter-spacing, casing, color, etc.).
+
+### Body-style overrides (content scope)
+
+`bodyStyle` drives typography inside `.body-style`. Use `_tokens.scss` for
+defaults, then override colors and sizes in `_body-style.scss` to target only
+rich text/content areas.
+
+```scss
+/* web/themes/custom/basekit_site/scss/_body-style.scss */
+.body-style h2 { color: $color-h2; }
+.body-style h3 { color: $color-h3; }
+.body-style p,
+.body-style li { color: $color-text; }
+```
+
 ## Customize site colors
 
 

@@ -2,7 +2,8 @@
 
 Basekit uses a single `.body-style` class for long‑form text (prose). The class
 applies consistent font sizing, line‑height, spacing, and heading styling across
-all rich‑text fields.
+rich‑text fields. BaseKit does not set global `h2–h6` styles outside `.body-style`;
+use utilities for UI headings.
 
 ## Where body-style is defined (Basekit)
 
