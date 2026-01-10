@@ -8,7 +8,7 @@ as possible to Drupal coding standards.
 
 Install these from the Extensions panel:
 
-- PHP CS Fixer (junstyle.php-cs-fixer)
+- Run on Save (emeraldwalk.runonsave)
 - PHP Intelephense
 - Prettier - Code formatter
 - YAML
@@ -17,15 +17,18 @@ Install these from the Extensions panel:
 
 ## Workspace settings (recommended)
 
-This repo already includes `.vscode/settings.json`. If you want to copy/paste
-manually, use this as a baseline and adjust paths if needed:
+This repo uses a multi-root workspace, so settings live in
+`dev.justsomeguypainting.com2.code-workspace` under `"settings"`. If you are
+working in a single-folder workspace, you can put the same settings in
+`.vscode/settings.json`. Use the workspace file when you need multiple folders
+open at once (for `../basekit*` repos).
+
+If you want to copy/paste manually, use this as a baseline and adjust paths if
+needed:
 
 ```json
 {
   "editor.formatOnSave": true,
-  "[php]": {
-    "editor.defaultFormatter": "junstyle.php-cs-fixer"
-  },
   "[scss]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
@@ -41,10 +44,15 @@ manually, use this as a baseline and adjust paths if needed:
   "[twig]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "php-cs-fixer.executablePath": "${workspaceFolder}/vendor/bin/php-cs-fixer",
-  "php-cs-fixer.rules": "@Drupal",
-  "php-cs-fixer.formatHtml": false,
-  "php-cs-fixer.autoFixBySave": true,
+  "emeraldwalk.runonsave": {
+    "commands": [
+      {
+        "match": "\\.(php|module|inc|install|theme|profile)$",
+        "cmd": "lando php vendor/bin/phpcbf --standard=.phpcs.xml ${file}",
+        "isAsync": true
+      }
+    ]
+  },
   "files.associations": {
     "*.module": "php",
     "*.install": "php",
@@ -67,8 +75,10 @@ manually, use this as a baseline and adjust paths if needed:
 
 Notes:
 
-- PHP formatting uses `vendor/bin/php-cs-fixer` and the local `.php-cs-fixer.php`.
+- PHP formatting uses `vendor/bin/phpcbf` and the local `.phpcs.xml`.
   Run `lando composer install` to ensure the binary exists.
+- If `vendor/bin/phpcbf` is missing, install the Drupal Coder tools:
+  `lando composer require --dev drupal/coder`
 - Prettier reads `.prettierrc` in this repo for JS/SCSS/YAML/JSON.
 - Twig formatting is best-effort. If Prettier is not formatting Twig for you,
   install Twig Formatter and set it as the default formatter for `[twig]`.

@@ -8,16 +8,12 @@ Where things live
 - Common usage examples: `web/themes/custom/gravelle1/scss/layout/_page-format.scss`, `web/themes/custom/gravelle1/scss/block/_block-defaults.scss`
 
 Core brand tokens
-- ` $brand-bg` — site/page background (was `$color-1`)
+- ` $brand-deep` — deep brand background (site/body)
+- ` $brand-surface` — page surface background
 - ` $brand-primary` — primary brand (gold)
 - ` $brand-accent` — accent (blue)
 - ` $brand-neutral` — neutral/taupe for tertiary headings and UI
-
-Back‑compat aliases (still supported)
-- ` $color-1` → `$brand-bg`
-- ` $color-2` → `$brand-primary`
-- ` $color-3` → `$brand-accent`
-- ` $color-4` → `$brand-neutral`
+- ` $brand-light` — cream/light brand (text and light accents)
 
 Semantic color roles
 - Headings
@@ -31,6 +27,7 @@ Semantic color roles
   - ` $link-color`, ` $link-hover-color`, ` $link-click-color`, ` $link-border`
 - Surfaces and lines
   - ` $surface-0` (page), ` $surface-1` (cards/blocks), ` $surface-2` (elevated)
+  - ` $site-bgcolor` → `$brand-deep`, ` $page-bgcolor` → `$brand-surface`
   - ` $rule` (underlines/rules), ` $border` (UI borders)
 - Focus & selection
   - ` $focus-ring`, ` $selection`
@@ -101,7 +98,7 @@ Creating a new variant (hover/active)
 ```
 
 Accessibility notes
-- On the background `#635d59`, large headings with `$brand-primary`, `$brand-accent`, and `$brand-neutral` meet contrast for large text.
+- On the page surface `#635d59`, large headings with `$brand-primary`, `$brand-accent`, and `$brand-neutral` meet contrast for large text.
 - Body copy should stay on ` $color-text`/` $text-muted` for readability.
 - Use ` $rule`/` $border` for separation instead of low‑contrast text colors.
 
@@ -129,10 +126,10 @@ a:hover   { color: tint($brand-accent, 16%); }
 a:active  { color: shade($brand-accent, 16%); }
 ```
 
-Custom soft card using brand background
+Custom soft card using brand surface
 ```
 .card--soft {
-  background: tint($brand-bg, 8%);
+  background: tint($brand-surface, 8%);
   border: $stroke-1 solid rgba($brand-neutral, .35); /* or $border */
 }
 ```
