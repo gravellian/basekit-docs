@@ -73,6 +73,12 @@ For component styles, prefer the theme mixins (keeps magic numbers in one place)
 }
 ```
 
+**SDC pattern guidance**
+
+SDC patterns are breakpoint-agnostic. Keep base styles mobile-first and use the
+theme mixins for sizing and layout changes, rather than hardcoded breakpoint
+values inside components.
+
 **Adjusting the design**
 
 If you change page width or font‑size at any breakpoint:

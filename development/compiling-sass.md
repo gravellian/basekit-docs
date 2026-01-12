@@ -20,24 +20,24 @@ when `NODE_ENV` is not `production`.
 - Development build: sourcemaps ON (easier debugging).
 - Production build: sourcemaps OFF (no map files or map references).
 
-`NODE_ENV=production` is what controls this.
+`NODE_ENV=production` is what controls this. Both themes set `npm run build`
+to run with `NODE_ENV=production`, so production builds do not write or
+reference sourcemaps.
 
 ## Lando tooling (recommended)
 
-From the site repo root:
-
 Subtheme:
 ```bash
-lando gulp        # production build (no sourcemaps)
-lando gulp-dev    # development build (sourcemaps)
-lando watch       # watch mode (development)
+cd web/themes/custom/basekit_site
+lando npm run build   # production build (no sourcemaps)
+lando npm run watch   # watch mode (development)
 ```
 
 Base theme:
 ```bash
-lando basekit-gulp       # production build (no sourcemaps)
-lando basekit-gulp-dev   # development build (sourcemaps)
-lando basekit-watch      # watch mode (development)
+cd ../basekit
+lando npm run build   # production build (no sourcemaps)
+lando npm run watch   # watch mode (development)
 ```
 
 ## Working directly in ../basekit

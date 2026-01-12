@@ -62,6 +62,12 @@ View modes and CSS
 - Prefer styling based on bundle + view mode classes, e.g.:
   - `.block-type--media_text.block-view-mode--split_left .block-wrap { grid-template-columns: 1fr 1fr; }`
 - Keep structural changes (field composition/formatters) in view modes; use component props for purely stylistic variations.
+- View mode labels are global per entity type (`block_content`) and cannot vary by bundle; you can only enable/disable a view mode per bundle.
+- View mode keys should match SDC partial names and follow one of these patterns:
+  - `default`
+  - Descriptive layout names (`split_left`, `compact`)
+  - Generic numbered variants (`variant_01`, `variant_02`) for purely stylistic swaps
+  - Media/aspect variants (`main_100_16x9`, `main_100_21x9`)
 
 Working with block items (grids/lists)
 

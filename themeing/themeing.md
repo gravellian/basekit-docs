@@ -148,5 +148,26 @@ rich text/content areas.
 
 ## Customize site colors
 
+Set your brand palette first and let the semantic roles follow. Keep overrides in
+`web/themes/custom/basekit_site/scss/_tokens.scss` and avoid hard-coding hex
+values in components.
+
+Recommended order for brand tokens:
+
+```scss
+@forward 'base/var/var_default' with (
+  $brand-deep: #4f4a47,
+  $brand-surface: #635d59,
+  $brand-primary: #668fef,
+  $brand-secondary: #c13121,
+  $brand-accent: #fde021,
+  $brand-neutral: #b59f86,
+  $brand-light: #f1e9da
+);
+```
+
+Use `$site-bgcolor` and `$page-bgcolor` for body/page surfaces, and map them to
+your brand tokens in the same file (e.g., `$site-bgcolor: $brand-deep`,
+`$page-bgcolor: $brand-surface`).
 
 ## Customize block styles

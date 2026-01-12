@@ -13,11 +13,16 @@ Override these in your subtheme via:
 
 ## Brand + palette
 
+Suggested order for defining your palette (everything else derives from these):
+
 ```scss
-$brand-bg
+$brand-deep
+$brand-surface
 $brand-primary
+$brand-secondary
 $brand-accent
 $brand-neutral
+$brand-light
 ```
 
 ## Body + page colors/alignment

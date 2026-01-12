@@ -21,3 +21,22 @@ lando drush en -y ai ai_provider_openai key
 lando drush cex -y
 lando drush cr
 ```
+
+For lando dev environemts, use a .lando.local.yml to store the open-ai credentilals key.
+
+```
+services:
+  appserver:
+    overrides:
+      environment:
+        OPENAI_API_KEY: 'sk-...'
+```
+
+
+Create a secret key in you AI provider
+
+You can create it in your OpenAI account:
+
+Go to https://platform.openai.com/api-keys and sign in.
+Click “Create new secret key.”
+Copy it right away (you won’t be able to see it again).
