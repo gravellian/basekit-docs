@@ -119,6 +119,45 @@ Hard-coded values are acceptable for a genuinely unique brand decision, but
 repeated values belong in tokens. `!important`, generated IDs, deep selectors,
 and fixed geometry should be treated as warnings and justified during review.
 
+## Hero headline presentation API
+
+For `hero_headline` in its `default` view mode, the component owns the media
+selector and SVG integration. Subthemes set these CSS custom properties on
+`.block-type--hero_headline.block-view-mode--default`, using values from their
+own `_tokens.scss`:
+
+| Property | BaseKit fallback |
+| --- | --- |
+| `--hero-headline-icon-width` | `7em` |
+| `--hero-headline-icon-height` | `auto` |
+| `--hero-headline-icon-border` | `0 none` |
+| `--hero-headline-icon-padding` | `0` |
+| `--hero-headline-icon-radius` | `0` |
+| `--hero-headline-icon-background` | `transparent` |
+| `--hero-headline-icon-shadow` | `none` |
+| `--hero-headline-icon-color` | BaseKit primary color |
+
+These controls preserve the component's existing max-width/max-height limits.
+They do not change the content model or apply automatically to other view modes.
+The existing `background_banner` controls retain their separate
+`--hero-headline-banner-*` namespace. A subtheme must not target `#icon-primary`
+or add `!important` simply to skin the default icon.
+
+Keep palette colors distinct from semantic roles. For example, `$on-color`
+can be white while `$brand-light` is cream. Hero-heading and shadow roles may
+reference those colors without scattering literals through component files.
+Fixed decorative dimensions are permitted as named site tokens when they are
+intentional; moving a value into a token does not make it intrinsically responsive.
+
+BaseKit component CSS is compiled separately from subtheme Sass. Forwarding a
+site Sass token alone cannot recolor an already-compiled component. Use its
+documented CSS properties or a scoped site presentation override; extend the
+shared API when another view mode needs a reusable control.
+
+Release the BaseKit component change before publishing subtheme CSS that
+depends on these properties, and update each site's Composer lock. For a
+presentation-only update, do not import the site's full Drupal configuration.
+
 ## Configuration lifecycle
 
 Portable configuration is authored and reviewed in `basekit-recipe`. A site
@@ -193,6 +232,59 @@ background-image banner; the administrative `info` value remains separate
 from the visible `field_block_title`. This replaces the former
 `banner_headline` bundle. `basic` is Drupal's general-purpose block type and is
 not itself a BaseKit component contract.
+
+## Runtime body-copy scale
+
+BaseKit provides the opt-in `scss/_copy-scale.scss` API, used by GC, JSG and
+the starter templates. Existing sites do not change until they opt in. The legacy
+Sass `$font-size-body` still feeds compiled defaults; changing it alone does
+not update independently compiled BaseKit components.
+
+| CSS token | Role |
+| --- | --- |
+| `--font-size-body` | Site's standard copy size |
+| `--font-size-body-small` | Standard × 0.85 |
+| `--font-size-body-large` | Standard × 1.15 |
+| `--font-size-body-ui` | Standard × 0.65 |
+
+Each subtheme defines `$body-size` and the three ratio tokens in `_tokens.scss`.
+GC uses `max(18px, 1.85rem)`; JSG uses `max(18px, 1.9rem)`. Shared token names
+and roles do not require identical brand typography. Root-relative sizes avoid
+compounding through nested component wrappers.
+
+`_typography.scss` includes the shared mixin rather than copying its selectors:
+
+```scss
+@use 'tokens' as site;
+@use 'copy-scale';
+
+@include copy-scale.install(
+  $body-size: site.$body-size,
+  $small: site.$body-small-ratio,
+  $large: site.$body-large-ratio,
+  $ui: site.$body-ui-ratio
+);
+```
+
+The mixin publishes the CSS tokens, and `.body-style` connects
+`--body-style-font-size` to `--font-size-body`. The `copy-small` and `copy-large`
+classes (and `copy-ui`) belong on the `.body-style` wrapper. Other deliberate ratios may use
+`calc(var(--font-size-body) * 0.9)` on the intended copy element. Grid Topics'
+`.topic-text`/legacy `.text` and utility-belt breadcrumbs have explicit adapters. Other legacy
+components and interface styles still require an audit; this is not a claim
+that every text rule has been converted.
+
+Keep heading sizes, brand colors, prose rhythm, and layout gutters separate
+from this copy scale. Text fields fill their assigned layout regions; do not
+add universal maximum field widths or automatic multi-column text flow.
+
+Before migrating Urban Art Network's `dev.urbanartnetwork.org1`, compare its
+block schema/rendering with this contract and implement this same copy API in
+its subtheme. Preserve its brand choices. `dev.urbanartnetwork.org1-compare`
+represents the live-site comparison; reconcile newer production content before
+any migration deployment. Do not replace production content from a stale dev
+database. Validate body and block copy plus small/large/UI roles at mobile and
+desktop sizes before releasing the shared implementation.
 
 ## Architectural change process
 
