@@ -22,8 +22,11 @@ lando start
 # 3) Install Drupal (admin credentials are printed)
 lando drush site:install --db-url=mysql://drupal11:drupal11@database/drupal11 -y
 
-# 4) Enable all required contrib (includes background image formatter + superfish + paragraphs, etc.)
-lando drush en -y block block_content field text image media media_library responsive_image views editor rest workflows node taxonomy layout_builder focal_point image_effects inline_svg crop paragraphs entity_reference_revisions layout_builder_styles layout_builder_modal easy_breadcrumb bg_image_formatter responsive_bg_image_formatter eva profile token superfish svg_image swiper_formatter admin_toolbar admin_toolbar_tools
+# 4) Standardize the admin UI and enable all required modules.
+# Drupal 11.4 Standard installs the Navigation sidebar; BaseKit uses the
+# familiar top Toolbar enhanced by Admin Toolbar instead.
+lando drush pm:uninstall navigation -y
+lando drush en -y toolbar admin_toolbar admin_toolbar_tools block block_content field text image media media_library responsive_image views editor rest workflows node taxonomy layout_builder focal_point image_effects inline_svg crop paragraphs entity_reference_revisions layout_builder_styles layout_builder_modal easy_breadcrumb bg_image_formatter responsive_bg_image_formatter eva profile token superfish svg_image swiper_formatter
 
 # 5) Enable BaseKit themes and set the subtheme as default/admin
 lando drush theme:install basekit basekit_site
@@ -68,6 +71,7 @@ chmod +x scripts/*.sh
 
 ## Notes
 - The project template already requires all contrib dependencies needed by the recipes (media, paragraphs, admin_toolbar, etc.).
+- `lando recipes-apply` enforces the BaseKit admin UI policy on fresh and existing sites: core Navigation is uninstalled, while Toolbar, Admin Toolbar, and Admin Toolbar Tools are enabled.
 - If `drupal recipe` inside Lando throws an existing-config or plugin conflict on an installed site, use `lando recipes-apply`. The helper falls back to ordered partial imports instead of running a full sync import.
 - When developing BaseKit locally, re-run `composer update gravellian/basekit gravellian/basekit-recipe -W` and `lando recipes-apply` to mirror changes. 
 
