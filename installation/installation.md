@@ -71,10 +71,10 @@ composer create-project gravellian/basekit-project:dev-main .
 lando init --source cwd --recipe drupal11 --webroot web --name dev.basekitsite.com1
 lando start
 lando drush site:install --db-url=mysql://drupal11:drupal11@database/drupal11 -y
-# Apply the aggregate recipe (config + modules), rebuild cache
-lando php web/core/scripts/drupal recipe recipes/basekit-recipe/recipes/site || \
-  lando drush cim -y && lando drush updb -y
-lando drush cr
+# Apply the aggregate recipe (config + modules), rebuild cache.
+# If the recipe command hits existing-config conflicts, use the project helper's
+# ordered partial-import fallback.
+lando recipes-apply
 # BaseKit + basekit_site are included; basekit_setup installs blocks/menus on the default theme.
 ```
 
@@ -232,7 +232,7 @@ Notes:
 
 ### 2d) Installing the Docs package
 
-To install `gravellian/basekit-docs` into `docs/`, add the installer to Composer and map the type to the `docs/` folder:
+To install `gravellian/basekit-docs`, add the installer to Composer and map the type to a docs folder. If your project has its own docs, prefer `docs/basekit/` so Composer never owns the whole project docs directory.
 
 ```
 composer require oomphinc/composer-installers-extender:^2.0 -W
@@ -246,7 +246,7 @@ composer require oomphinc/composer-installers-extender:^2.0 -W
 "extra": {
   "installer-types": ["gravellian-docs"],
   "installer-paths": {
-    "docs/": ["type:gravellian-docs"]
+    "docs/basekit/": ["type:gravellian-docs"]
   }
 }
 

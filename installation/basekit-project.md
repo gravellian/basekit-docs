@@ -31,12 +31,12 @@ lando drush cset system.theme default basekit_site -y
 lando drush cset system.theme admin basekit_site -y
 
 # 6) Import recipes in this order (to satisfy dependencies)
+lando drush cim -y --partial --source=/app/recipes/basekit-recipe/recipes/basekit/config
 lando drush cim -y --partial --source=/app/recipes/basekit-recipe/recipes/paragraphs_base/config
 lando drush cim -y --partial --source=/app/recipes/basekit-recipe/recipes/blocks_hero_headline/config
 lando drush cim -y --partial --source=/app/recipes/basekit-recipe/recipes/blocks_hero_announcement/config
 lando drush cim -y --partial --source=/app/recipes/basekit-recipe/recipes/blocks_common/config
 lando drush cim -y --partial --source=/app/recipes/basekit-recipe/recipes/pages/config
-lando drush cim -y --partial --source=/app/recipes/basekit-recipe/recipes/basekit/config
 lando drush en -y prism
 lando drush cim -y --partial --source=/app/recipes/basekit-recipe/recipes/article/config
 lando drush cim -y --partial --source=/app/recipes/basekit-recipe/recipes/profile_author/config
@@ -52,7 +52,7 @@ lando drush cr
 ```
 
 What you get
-- BaseKit theme at `web/themes/custom/basekit`.
+- BaseKit theme at `web/themes/contrib/basekit` unless your project overrides Composer installer paths.
 - Bundled sub‑theme `web/themes/custom/basekit_site` set as default/admin.
 - BaseKit recipes applied (blocks, menus, content types, media, etc.).
 - Blocks for branding (logo only), breadcrumbs, header main menu, manage menu, sidebar/mobile main menu, footer menu, and account are placed on `basekit_site` via config; powered-by and search blocks ship disabled.
@@ -68,7 +68,7 @@ chmod +x scripts/*.sh
 
 ## Notes
 - The project template already requires all contrib dependencies needed by the recipes (media, paragraphs, admin_toolbar, etc.).
-- If `drupal recipe` inside Lando throws a `PluginExists` error, use the fallback `lando drush cim -y && lando drush updb -y && lando drush cr` against the unpacked recipe config (already under `recipes/`).
+- If `drupal recipe` inside Lando throws an existing-config or plugin conflict on an installed site, use `lando recipes-apply`. The helper falls back to ordered partial imports instead of running a full sync import.
 - When developing BaseKit locally, re-run `composer update gravellian/basekit gravellian/basekit-recipe -W` and `lando recipes-apply` to mirror changes. 
 
 
@@ -102,5 +102,5 @@ chmod +x scripts/*.sh
 
   Tips:
   - Keep `composer.local.json` and `composer.local.lock` out of Git. Seed the lock with `cp composer.lock composer.local.lock` so partial updates work.
-  - Mount the workspace folders into Lando (see `.lando.yml` example in the BaseKit development guide) so the symlinks resolve inside containers.
+  - Mount the workspace folders into Lando (see `.lando.yml` example in the BaseKit development guide) so path-repo symlinks resolve inside containers. Run `lando rebuild -y` after adding those mounts.
   - After editing BaseKit/recipe/docs, run `./scripts/site-task.sh getBase` (host) to copy the latest files, apply recipes, and rebuild caches/theme assets.

@@ -91,6 +91,12 @@ does not require different Drupal display configuration. Use a Layout Builder
 style class for contextual container treatment such as `box1`, `box2`,
 `box1-items`, `box2-items`, or `wide`.
 
+Use the recipe-provided `full_bleed` style (`block-full-bleed` in rendered
+markup) when a block's background should reach both viewport edges while its
+content remains on BaseKit's stepped `.sitew`/`.pagep` canvas. The style is a
+background-painting primitive; it must not move the block content out of the
+normal layout or add a second horizontal content gutter.
+
 Names use lower-case machine identifiers with underscores for Drupal view
 modes and matching partial filenames. CSS classes use hyphens.
 

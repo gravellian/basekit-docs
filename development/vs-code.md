@@ -18,8 +18,8 @@ Install these from the Extensions panel:
 ## Workspace settings (recommended)
 
 This repo uses a multi-root workspace, so settings live in
-`dev.justsomeguypainting.com2.code-workspace` under `"settings"`. If you are
-working in a single-folder workspace, you can put the same settings in
+`busops-wm-fsweb.code-workspace` under `"settings"`. If you are working in a
+single-folder workspace, you can put the same settings in
 `.vscode/settings.json`. Use the workspace file when you need multiple folders
 open at once (for `../basekit*` repos).
 
@@ -42,7 +42,7 @@ needed:
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[twig]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "serhatkaya.twig-formatter"
   },
   "emeraldwalk.runonsave": {
     "commands": [
@@ -80,8 +80,8 @@ Notes:
 - If `vendor/bin/phpcbf` is missing, install the Drupal Coder tools:
   `lando composer require --dev drupal/coder`
 - Prettier reads `.prettierrc` in this repo for JS/SCSS/YAML/JSON.
-- Twig formatting is best-effort. If Prettier is not formatting Twig for you,
-  install Twig Formatter and set it as the default formatter for `[twig]`.
+- Twig formatting is best-effort. Install Twig Formatter and set it as the
+  default formatter for `[twig]`.
 
 ## Quick checks
 
