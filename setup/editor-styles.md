@@ -48,6 +48,34 @@ contract does not expose pixel sizes, arbitrary colors, arbitrary font names,
 spacing, positioning, borders, columns, or free-form backgrounds. Layout
 Builder and theme components own layout and block-level presentation.
 
+## Media labels and alternative text
+
+Media image formatters must hide the generic image-field label. A visually
+hidden label such as `Image` adds no useful meaning and is announced in
+addition to the image alternative text. The BaseKit recipe therefore sets the
+default image media display, the media-library display, and every responsive
+`main_*` display to `label: hidden`.
+
+This does not make the image decorative. Authors must still supply alternative
+text that communicates the image's purpose in context. Use empty alternative
+text only when the image is genuinely decorative and nearby content already
+conveys everything it contains.
+
+## Graphic headings belong to blocks
+
+Do not use CKEditor classes or visually hidden duplicate text to turn artwork
+into a page heading. When approved artwork contains the page's visible title,
+an opt-in block view mode may render the image directly inside the appropriate
+heading element. The image alternative text becomes the accessible heading
+name, so it must contain the concise title rather than a description of the
+artwork.
+
+The heading must contain the image itself, not Drupal field or media `<div>`
+wrappers. A page should still have one clear H1, and subsequent headings must
+follow the content hierarchy. This is a reusable-block rendering contract, not
+part of the CKEditor Style menu. Individual block recipes may implement it;
+themes own its appearance.
+
 ## Unified copy scale
 
 All five size roles use the site's body baseline: 75%, 85%, 100%, 115%, 130%.

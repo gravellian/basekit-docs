@@ -19,6 +19,11 @@ main_100 - applies to the "main" region, 100% width, no cropping
 
 Images are cropped using the "Focal Point Scale and Crop" effect when an aspect ratio is specified.
 
+Image media displays hide the generic field label. Accessible image meaning
+comes from contextual alternative text, not an additional visually hidden
+word such as "Image". This applies to the default image display as well as all
+responsive `main_*` displays.
+
 See the list of responsive media styles in [image-styles.md](image-styles.md)
 
 - **web/themes/custom/gravelle1/templates/media/media--image.html.twig**
