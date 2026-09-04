@@ -10,6 +10,7 @@
 ## Setup
 
 - [Administration and form-display plan](setup/admin-experience.md)
+- [Public Forms and Spam Protection](setup/form-spam-protection.md)
 - [BaseKit Custom Block Architecture](setup/custom-block-architecture.md)
 - [Responsive Media Styles](setup/responsive-media.md)
 - [Editor Styles (WYSIWYG)](setup/editor-styles.md)
