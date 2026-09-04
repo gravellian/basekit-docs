@@ -268,11 +268,12 @@ bash web/themes/contrib/basekit/subtheme-starter/scripts/new-subtheme.sh mysite 
 rg "__THEME_NAME__|__THEME_MACHINE__" web/themes/custom/mysite -n || echo "tokens replaced OK"
 # Build subtheme assets
 cd web/themes/custom/mysite && npm install && npm run build && cd ../../../..
-# Enable BaseKit + subtheme, set default & admin theme
+# Enable BaseKit + subtheme; keep Gin as the admin theme
 lando drush then basekit -y
 lando drush then mysite -y
 lando drush cset system.theme default mysite -y
-lando drush cset system.theme admin mysite -y
+lando drush theme:install gin -y
+lando drush cset system.theme admin gin -y
 lando drush cr
 ```
 
