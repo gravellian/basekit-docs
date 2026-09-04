@@ -21,7 +21,8 @@ need fidelity beyond the editable body field.
 ## Ownership
 
 - `basekit-project` requires Gin for new sites and installs it before recipes.
-- `basekit-recipe` declares and installs Gin and selects it as the admin theme.
+- `basekit-recipe` declares and installs Gin, selects it as the admin theme,
+  and enables the admin theme for node create/edit routes.
 - `basekit` and site subthemes continue to own frontend and editor rendering.
 - A future small `basekit_admin` module may hold proven integration fixes; it
   must not become a replacement admin theme.
@@ -117,7 +118,8 @@ authoring decision.
 ## Rollout phases
 
 1. Require Gin 5, install it, and set `system.theme:admin` to `gin` for fresh
-   BaseKit installations.
+   BaseKit installations. Set `node.settings:use_admin_theme` to `true` so node
+   create/edit forms actually use Gin rather than the frontend theme.
 2. Adopt Gin on local BaseKit sites without changing frontend themes or editor
    configuration; validate node, block, media, user, Views, and Webform screens.
 3. Record recurring friction before adding Gin settings or custom CSS.
