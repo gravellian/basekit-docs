@@ -28,10 +28,11 @@ lando drush site:install --db-url=mysql://drupal11:drupal11@database/drupal11 -y
 lando drush pm:uninstall navigation contact -y
 lando drush en -y toolbar admin_toolbar admin_toolbar_tools block block_content field text image media media_library responsive_image views editor rest workflows node taxonomy layout_builder focal_point image_effects inline_svg crop paragraphs entity_reference_revisions layout_builder_styles layout_builder_modal easy_breadcrumb bg_image_formatter responsive_bg_image_formatter eva profile token superfish svg_image swiper_formatter webform antibot honeypot
 
-# 5) Enable BaseKit themes and set the subtheme as default/admin
-lando drush theme:install basekit basekit_site
+# 5) Enable BaseKit for the frontend and Gin for administration
+lando drush theme:install basekit basekit_site gin
 lando drush cset system.theme default basekit_site -y
-lando drush cset system.theme admin basekit_site -y
+lando drush cset system.theme admin gin -y
+lando drush cset node.settings use_admin_theme true -y
 
 # 6) Import recipes in this order (to satisfy dependencies)
 lando drush cim -y --partial --source=/app/recipes/basekit-recipe/recipes/basekit/config
@@ -56,7 +57,8 @@ lando drush cr
 
 What you get
 - BaseKit theme at `web/themes/contrib/basekit` unless your project overrides Composer installer paths.
-- Bundled sub‑theme `web/themes/custom/basekit_site` set as default/admin.
+- Bundled sub‑theme `web/themes/custom/basekit_site` set as the frontend
+  default, with Gin as the admin theme.
 - BaseKit recipes applied (blocks, menus, content types, media, etc.).
 - Webform is the canonical public form system; Antibot and Honeypot provide the
   portable no-key spam-protection baseline.
@@ -72,7 +74,7 @@ chmod +x scripts/*.sh
 ```
 
 ## Notes
-- The project template already requires all contrib dependencies needed by the recipes (media, paragraphs, admin_toolbar, etc.).
+- The project template already requires all contrib dependencies needed by the recipes (Gin, media, paragraphs, admin_toolbar, etc.).
 - `lando recipes-apply` enforces the BaseKit admin UI policy on fresh and existing sites: core Navigation and Contact are uninstalled, while Toolbar, Admin Toolbar, and Admin Toolbar Tools are enabled. Webform remains the single public form system.
 - If `drupal recipe` inside Lando throws an existing-config or plugin conflict on an installed site, use `lando recipes-apply`. The helper falls back to ordered partial imports instead of running a full sync import.
 - When developing BaseKit locally, re-run `composer update gravellian/basekit gravellian/basekit-recipe -W` and `lando recipes-apply` to mirror changes. 

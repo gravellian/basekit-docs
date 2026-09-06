@@ -24,10 +24,29 @@ need fidelity beyond the editable body field.
 - `basekit-recipe` declares and installs Gin, selects it as the admin theme,
   and enables the admin theme for node create/edit routes.
 - `basekit` and site subthemes continue to own frontend and editor rendering.
+- Gin and Drupal core own administrative form markup. BaseKit does not copy
+  core's generic `form` or `content-edit` templates into the frontend theme.
 - A future small `basekit_admin` module may hold proven integration fixes; it
   must not become a replacement admin theme.
 - Site recipes own form-display configuration for portable content types and
   block bundles. Site-specific fields remain site configuration.
+
+## Public forms and subtheme overrides
+
+BaseKit provides a deliberately small public-form layer in `scss/_forms.scss`.
+It styles ordinary controls with low-specificity selectors and exposes
+`--basekit-form-*` custom properties for brand-level changes. This stylesheet
+is not loaded by Gin on administrative routes.
+
+A site subtheme should set those properties for broad visual changes, then use
+bundle- or form-specific selectors for exceptions such as `.user-login-form`
+or a particular `.webform-submission-*` form. Prefer CSS for appearance; add a
+Twig override only when the public form's markup or semantics truly need to
+change. Keep those overrides in the site subtheme, not in BaseKit and not in an
+admin-theme customization module.
+
+CKEditor styling remains a separate concern. Editor styles reproduce authored
+content semantics, while public form styles present inputs and labels.
 
 ## Form-display configuration
 
@@ -127,6 +146,19 @@ authoring decision.
    recipes, with active/config-sync reconciliation on existing sites.
 5. Add a `basekit_admin` module only when repeated cross-site requirements
    cannot be expressed cleanly as configuration.
+
+## Existing-site cleanup
+
+When adopting this policy on an existing site:
+
+1. Remove generic form and content-edit templates copied from older core or
+   Starterkit themes.
+2. Remove frontend CSS that targets Gin or broad `.admin-*` selectors.
+3. Keep intentional public-form rules, but move them into the active subtheme
+   and scope them to the login form, Webform, or other owning feature.
+4. Export reviewed `core.entity_form_display.*` configuration into the recipe
+   that owns each portable bundle.
+5. Leave site-only fields and their displays in that site's config sync.
 
 Do not couple Gin adoption to frontend redesign, CKEditor vocabulary changes,
 or production deployment. Those remain independently reviewable changes.

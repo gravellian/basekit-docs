@@ -16,7 +16,8 @@ This guide installs a fresh site using the BaseKit base theme + Recipes so you c
 2) Add BaseKit repositories (or local path repos such as `../basekit` and `../basekit-recipe`) and require the packages.  
 3) Initialize Lando for the codebase and start services.  
 4) Install Drupal, then apply the BaseKit recipes (`recipes/site`) to pull in config.  
-5) Scaffold a sub‑theme from BaseKit, build its assets, and set it as the default/admin theme.  
+5) Scaffold a sub‑theme from BaseKit and set it as the frontend default; install
+   Gin as the admin theme and enable it for node forms.
 6) Create your administrator account and verify default blocks/layouts are in place.
 
 ## Prerequisites
