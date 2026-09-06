@@ -27,6 +27,30 @@ Site adoption is a reviewed configuration change. Do not overwrite a site's
 active editor or filter configuration from the recipe without reconciling its
 database and config export first.
 
+## Standard text formats
+
+BaseKit ships three authoring contracts:
+
+| Machine name | Label | Purpose | Access |
+| --- | --- | --- | --- |
+| `content` | Content Editor | Structured page, article, and rich block copy with semantic styles and responsive media | Content editors and administrators |
+| `text_only` | Text only | Constrained titles and short copy without media or presentation markup | Content editors and administrators |
+| `full_html` | Content (advanced) | Trusted custom HTML for configuration pages, Views text, embeds, and exceptional administrative content | Administrators only |
+
+Page and Article body fields allow `content`. Page Config body fields allow
+`content` and `full_html`, with `content` first and weighted as the default.
+Short block-title fields allow `text_only`; rich block-text fields allow
+`content` unless the block contract deliberately requires plain copy.
+
+`full_html` reuses Drupal's conventional machine name because its security
+meaning remains unchanged: it is an effectively unrestricted administrator
+escape hatch. BaseKit does not repurpose `restricted_html`; that format is
+profile-owned or legacy site configuration. Likewise, the former BaseKit
+`article` format is redundant: Article fields use the shared `content` format.
+Existing sites must migrate stored `article`, `restricted_html`, or custom
+format values only after their markup has been checked against the destination
+filter. Never delete a format while content still references it.
+
 ## Approved semantic vocabulary
 
 The shared CKEditor Style menu may emit only these BaseKit presentation
@@ -60,6 +84,11 @@ This does not make the image decorative. Authors must still supply alternative
 text that communicates the image's purpose in context. Use empty alternative
 text only when the image is genuinely decorative and nearby content already
 conveys everything it contains.
+
+New embedded media defaults to the `main_25` view mode in both `content` and
+`full_html`. Authors can select any allowed `main_*` responsive mode when the
+content calls for another size or crop. Changing this default affects new
+insertions only; existing embeds retain their saved `data-view-mode`.
 
 ## Graphic headings belong to blocks
 
