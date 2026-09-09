@@ -74,6 +74,48 @@ Rules:
   generated block UUID classes for reusable presentation.
 - Drupal administrative attributes and render arrays must remain intact.
 
+## Bundle names and separation rules
+
+Bundle machine names describe the component's stable content contract, not a
+particular site's appearance. Use lower-case, family-first identifiers with
+underscores so related types sort together, for example `slider_image`,
+`slider_media`, `split_image`, and `split_media`.
+
+Create a new bundle when one or more of these are true:
+
+- the fields or validation rules differ materially;
+- the content has a different editorial or semantic meaning;
+- the allowed asset types or authoring workflow differ;
+- accessible markup or required behavior differs; or
+- changing between the two would discard or reinterpret stored content.
+
+Use a named variant when the same stored content supports both renderings and
+only layout, emphasis, proportion, or treatment changes. Use a controlled
+style class for small, independent choices such as spacing, width, surface,
+text alignment, or edge-to-edge treatment. Use a Drupal display mode when the
+rendering changes because of context, or when formatters, field order, aspect
+ratio, or markup change materially.
+
+Do not create opaque identifiers such as `display_001`, `variant_01`, or
+`style_02`. Machine names are permanent configuration and integration
+contracts. Give them stable semantic names such as `headline`, `photo_banner`,
+`image_left`, `compact`, or `full_width`; labels may be more conversational.
+
+Matching field sets strongly favor one bundle with variants, but field parity
+alone is not sufficient. A quotation, for example, remains a separate
+component because its semantic and accessibility contract differs from an
+ordinary rich-text feature even if an older implementation happens to reuse
+the same fields.
+
+### Image and Media pairs
+
+BaseKit may provide paired Image and Media bundles when both Drupal authoring
+models serve real needs. The Image form uses a direct image field for a simple,
+one-off upload. The Media form uses an entity reference for reuse, centralized
+metadata, and support for multiple allowed media bundles. Paired bundles share
+the same normalized SDC props and frontend presentation API wherever possible;
+their storage and editorial contracts remain explicit in their names.
+
 ## View modes, variants, and styles
 
 Use a **view mode** when the editor is choosing a consequential rendering
@@ -97,8 +139,8 @@ content remains on BaseKit's stepped `.sitew`/`.pagep` canvas. The style is a
 background-painting primitive; it must not move the block content out of the
 normal layout or add a second horizontal content gutter.
 
-Names use lower-case machine identifiers with underscores for Drupal view
-modes and matching partial filenames. CSS classes use hyphens.
+Names use lower-case semantic machine identifiers with underscores for Drupal
+view modes and matching partial filenames. CSS classes use hyphens.
 
 Unknown view modes may fall back to `default` so a page still renders, but the
 fallback must be visible in automated validation; it must not hide an
@@ -219,25 +261,34 @@ Before styling or migrating a BaseKit site, verify:
 8. Representative blocks are checked at mobile and desktop widths before
    deployment.
 
-## Current portable block library
+## Target portable block library
 
-The current library includes:
+The unified BaseKit contract is organized around nine content models:
 
-- `grid_topics`
-- `hero_announcement`
-- `hero_headline`
-- `image_slider`
-- `media_slider`
-- `media_text`
-- `quote_feature`
-- `text_rich`
+| Bundle | Contract |
+| --- | --- |
+| `rich_text` | Optional title, formatted body, and optional link; replaces `basic`, `block_custom`, and `text_rich` for portable content. |
+| `hero` | Prominent title, text, action, and optional visual content, with named `headline`, `announcement`, and `photo_banner` variants. |
+| `split_image` | Text and a direct Drupal image field, with named image-position and proportion variants. |
+| `split_media` | The same presentation contract backed by a Drupal Media reference. |
+| `slider_image` | A collection of direct image-field items. |
+| `slider_media` | A collection of reusable Media entities. |
+| `quote` | Quotation or testimonial content with semantic quotation markup and attribution support. |
+| `grid_items` | A manually authored collection of structured items, initially including the `topics` presentation. |
+| `content_listing` | A query- or View-backed listing of existing entities, with presentations such as `grid`, `list`, and `contacts`. |
 
-`hero_headline` includes an optional `field_block_background`. Its
-`background_banner` view mode turns that same headline content into a scoped
-background-image banner; the administrative `info` value remains separate
-from the visible `field_block_title`. This replaces the former
-`banner_headline` bundle. `basic` is Drupal's general-purpose block type and is
-not itself a BaseKit component contract.
+The existing bundles remain supported during migration. Their target mappings
+are `text_rich`/`basic`/`block_custom` to `rich_text`,
+`hero_headline`/`hero_announcement`/`photo_banner` to `hero`, `media_text` to
+`split_image`, `image_text_split` to `split_media`, `image_slider` to
+`slider_image`, `media_slider` to `slider_media`, `quote_feature` to `quote`,
+`grid_topics` to `grid_items`, and `contacts_grid` to `content_listing`.
+
+Do not delete or rename an installed bundle merely to match this table. Each
+mapping requires a field-level data migration, compatibility rendering during
+the transition, and an editorial review. Site-specific motion components such
+as UAN's `scrolling_text` and `scrolling_banner` remain outside the portable
+contract until their behavior and reduced-motion accessibility are ready.
 
 ## Runtime body-copy scale
 

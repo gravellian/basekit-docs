@@ -7,7 +7,7 @@ Key ideas
 - Base wrapper lives in `templates/block/block--block-content.html.twig` and applies to ALL custom block bundles.
 - Every custom block renders with a single inner wrapper `.block-wrap` inside the outer `.block` container.
 - SDC partials must NOT output `.block-wrap`; they render only their inner structure (image/title/content/text/etc.).
-- View modes are exposed as classes and should drive styling differences where possible.
+- View modes are exposed as classes and should drive consequential rendering differences where appropriate.
 - If a bundle needs a special wrapper, create a more specific block template override (keep the required classes/elements).
 - Lists/grids inside blocks use the unified `.block-items` pattern. See Custom Block Displays: [custom-block-display.md](custom-block-display.md).
 
@@ -90,10 +90,11 @@ Preprocess variables
 
 Naming and bundle guidance
 
-- Keep block bundles stable and intentional (hero*\*, grid\*\*, media\_*text, quote\_\*, text_rich).
+- Name block bundles for stable content contracts using semantic, family-first identifiers (for example `split_image` and `split_media`).
 - Reuse field machine names where possible (e.g., `field_block_text`, `field_block_image`, `field_block_link`).
-- View mode when changing structure/formatters (e.g., `split_left` vs `split_right`).
-- Component props for behavior/style toggles (e.g., density, theme, clickable).
+- Use named variants or view modes when changing structure or formatters (for example `image_left`, not `variant_01`).
+- Use component props or controlled styles for small behavior and presentation toggles (for example density or surface).
+- Follow the canonical separation and migration rules in [BaseKit Custom Block Architecture](custom-block-architecture.md).
 
 Example: media_text
 
